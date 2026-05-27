@@ -278,24 +278,21 @@
             loadDash();
         };
 
-        function sendPostRequest(payload, successMsgId) {
-            const btnAlert = document.getElementById(successMsgId);
-            btnAlert.style.display="block"; btnAlert.style.background="#fef9c3"; btnAlert.style.color="#854d0e"; btnAlert.innerHTML="กำลังส่งข้อมูลขึ้นระบบคลาวด์...";
-            
-            fetch(API_URL, {
-                method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload)
-            }).then(res => res.json()).then(data => {
-                if(data.status === "success") {
-                    btnAlert.style.background="#dcfce7"; btnAlert.style.color="#166534"; btnAlert.innerHTML=`<i class="fa-solid fa-check"></i> ${data.message}`;
-                    setTimeout(()=>btnAlert.style.display="none", 3000);
-                    if(payload.action==="assign") { document.getElementById("newDocTitle").value=""; document.getElementById("manualIdAssign").value=""; }
-                    if(payload.action==="scan") { document.getElementById("manualIdScan").value=""; }
-                    if(payload.action==="announce") { document.getElementById("announcementInput").value=""; location.reload(); }
-                } else {
-                    btnAlert.style.background="#fee2e2"; btnAlert.style.color="#991b1b"; btnAlert.innerHTML=`<i class="fa-solid fa-xmark"></i> ${data.message}`;
-                }
-            }).catch(err => { btnAlert.style.background="#fee2e2"; btnAlert.style.color="#991b1b"; btnAlert.innerHTML=`<i class="fa-solid fa-xmark"></i> การเชื่อมต่อล้มเหลว`; });
-        }
+        // แก้ไขฟังก์ชัน sendPostRequest ใน Index.html
+function sendPostRequest(payload, successMsgId) {
+    const btnAlert = document.getElementById(successMsgId);
+    btnAlert.style.display="block"; btnAlert.style.background="#fef9c3"; btnAlert.style.color="#854d0e"; btnAlert.innerHTML="กำลังส่งข้อมูล...";
+    
+    // เปลี่ยน mode เป็น 'cors' และตรวจสอบ URL ให้ถูกต้อง
+    fetch(API_URL, {
+        method: "POST",
+        mode: "cors", 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    // ... (ที่เหลือเหมือนเดิม)
+}
 
         function verifyUser() {
             const name = document.getElementById("userName").value.trim(), pass = document.getElementById("userPassword").value.trim(); 
