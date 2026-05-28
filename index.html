@@ -25,7 +25,6 @@
         .header h1 { font-size: 18px; font-weight: 700; margin: 0; }
         .header-dev { font-size: 9px; color: #94a3b8; margin-top: 6px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; }
         
-        /* 🔴 แถบโชว์คนออนไลน์ Real-time (กลับมาแล้ว!) */
         .live-bar { background: #e2e8f0; color: var(--navy); font-size: 11px; text-align: center; padding: 6px; font-weight: 700; border-bottom: 1px solid #cbd5e1; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.02); }
         
         .container { padding: 12px; max-width: 500px; margin: 0 auto; }
@@ -62,8 +61,6 @@
         .tag.status-info { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; } 
         .tag.status-err { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; } 
         .urg-red { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 700; }
-        .urg-orange { background: #ffedd5; color: #ea580c; border: 1px solid #fdba74; font-weight: 700; }
-        .urg-yellow { background: #fef9c3; color: #ca8a04; border: 1px solid #fde047; font-weight: 700; }
         
         .input-group { display: flex; gap: 8px; margin-bottom: 12px; }
         .input-group .form-control { margin-bottom: 0; }
@@ -72,7 +69,6 @@
         .chip { padding: 8px 12px; border: 1px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-light); cursor: pointer; background: #fff; }
         .chip-label input:checked + .chip { background: var(--navy); color: #fff; border-color: var(--navy); }
         
-        /* กรอบกล้องสแกน QR */
         .camera-box-frame { position: relative; border-radius: 12px; overflow: hidden; border: 2px solid var(--border); background: #000; min-height: 250px; width: 100%; display: flex; justify-content: center; align-items: center; }
         .camera-box-frame > div { width: 100%; }
 
@@ -100,7 +96,7 @@
 </head>
 <body>
 
-    <div class="marquee-container"><div class="marquee-text" id="marqueeText"><i class="fa-solid fa-lock"></i> กรุณาเข้าสู่ระบบเพื่อปฏิบัติงาน</div></div>
+    <div class="marquee-container"><div class="marquee-text" id="marqueeText"><i class="fa-solid fa-satellite-dish"></i> กำลังเชื่อมต่อข้อมูล...</div></div>
     
     <div class="header">
         <h1><i class="fa-solid fa-shield-halved" style="color: var(--gold);"></i> บก.ตชด.ภาค 2</h1>
@@ -163,11 +159,7 @@
                     <div style="flex:1;"><div style="font-size:12px; font-weight:600; margin-bottom:5px;">พิกัด:</div><select id="locAssign" class="form-control"><option value="โต๊ะธุรการ">📍 โต๊ะธุรการ</option><option value="หน้าห้อง ผกก.">📍 หน้าห้อง ผกก.</option><option value="หน้าห้อง ผบก.">📍 หน้าห้อง ผบก.</option></select></div>
                 </div>
                 <hr class="divider">
-                <div class="input-group">
-                    <input type="text" id="manualIdAssign" class="form-control" placeholder="พิมพ์รหัสแฟ้ม" style="text-transform: uppercase;">
-                    <button class="btn-action" onclick="manualAssign()">ผูกข้อมูล</button>
-                </div>
-                
+                <div class="input-group"><input type="text" id="manualIdAssign" class="form-control" placeholder="พิมพ์รหัสแฟ้ม" style="text-transform: uppercase;"><button class="btn-action" onclick="manualAssign()">ผูกข้อมูล</button></div>
                 <div class="camera-box-frame" id="cameraBoxAssign"><div id="reader-assign"></div></div>
                 <label class="btn-camera" style="background:var(--gold); color:var(--navy);"><i class="fa-solid fa-image"></i> อัปโหลดรูปภาพ QR (กรณีกล้องมีปัญหา) <input type="file" id="qr-assign" accept="image/*" style="display:none;"></label>
             </div>
@@ -187,11 +179,7 @@
                 </div>
                 <div id="photoUploadSection" style="display:none; background:#fef2f2; padding:10px; border-radius:8px; margin-bottom:12px; border:1px dashed #fca5a5;"><div style="font-size:12px; font-weight:700; color:#dc2626; margin-bottom:5px;"><i class="fa-solid fa-camera"></i> ถ่ายภาพจุดที่ต้องแก้ไข (อัปโหลด)</div><input type="file" id="correctionImage" accept="image/jpeg, image/png" capture="environment" class="form-control" style="margin-bottom:0;"></div>
                 <select id="locScan" class="form-control" style="margin-top:10px;"><option value="โต๊ะธุรการ">📍 โต๊ะธุรการ</option><option value="หน้าห้อง ผกก.">📍 หน้าห้อง ผกก.</option><option value="หน้าห้อง ผบก.">📍 หน้าห้อง ผบก.</option></select>
-                <div class="input-group">
-                    <input type="text" id="manualIdScan" class="form-control" placeholder="ระบุเลขแฟ้ม" style="text-transform: uppercase;">
-                    <button class="btn-action" onclick="manualScan()">อัปเดต</button>
-                </div>
-                
+                <div class="input-group"><input type="text" id="manualIdScan" class="form-control" placeholder="ระบุเลขแฟ้ม" style="text-transform: uppercase;"><button class="btn-action" onclick="manualScan()">อัปเดต</button></div>
                 <div class="camera-box-frame" id="cameraBoxScan"><div id="reader-scan"></div></div>
                 <label class="btn-camera" style="background:var(--gold); color:var(--navy);"><i class="fa-solid fa-image"></i> อัปโหลดรูปภาพ QR (กรณีกล้องมีปัญหา) <input type="file" id="qr-scan" accept="image/*" style="display:none;"></label>
             </div>
@@ -211,15 +199,14 @@
                 
                 <div style="font-size:13px; font-weight:bold; color:var(--navy); margin-bottom:5px;"><i class="fa-solid fa-file-csv"></i> นำเข้ารายชื่อเจ้าหน้าที่แบบกลุ่ม (CSV)</div>
                 <input type="file" id="csvFileInput" accept=".csv" class="form-control" style="font-size:12px;">
-                <div style="font-size:10px; color:#64748b; margin-bottom:10px;">*คอลัมน์ CSV (3 คอลัมน์): ยศชื่อติดกัน, แผนก, สิทธิ์ (รออนุมัติ/ทั่วไป/ธุรการ/หน้าห้อง/เจ้าของเรื่อง/Admin)</div>
                 <button class="btn-camera" style="background:var(--navy); margin-bottom:15px;" onclick="importCSV()"><i class="fa-solid fa-upload"></i> อัปโหลดและนำเข้าระบบ</button>
 
                 <div style="font-size:13px; font-weight:bold; color:var(--navy); margin-bottom:5px;"><i class="fa-solid fa-users-gear"></i> จัดการสิทธิ์เจ้าหน้าที่</div>
                 <button class="btn-camera" style="background:var(--gold); color:var(--navy); margin-bottom:15px;" onclick="loadAdminUsers()"><i class="fa-solid fa-list"></i> โหลดรายชื่อผู้ใช้งานทั้งหมด</button>
                 <div id="adminUserList" style="margin-bottom:15px; font-size:12px; max-height:300px; overflow-y:auto; background:#fff; padding:5px; border-radius:4px;"></div>
                 
-                <div style="font-size:13px; font-weight:bold; color:var(--navy); margin-bottom:5px;"><i class="fa-solid fa-bullhorn"></i> ปรับแต่งข้อความตัววิ่งประชาสัมพันธ์ (ปชส.)</div>
-                <div class="input-group" style="margin-bottom:15px;"><input type="text" id="announcementInput" class="form-control" placeholder="พิมพ์ข้อความประกาศ..."><button class="btn-action" style="margin-top:0;" onclick="updateAnnouncement()">สั่งการ</button></div>
+                <div style="font-size:13px; font-weight:bold; color:var(--navy); margin-bottom:5px;"><i class="fa-solid fa-bullhorn"></i> ปรับแต่งประกาศประชาสัมพันธ์ (ปชส.)</div>
+                <div class="input-group" style="margin-bottom:15px;"><input type="text" id="announcementInput" class="form-control" placeholder="พิมพ์ข้อความ..."><button class="btn-action" style="margin-top:0;" onclick="updateAnnouncement()">สั่งการ</button></div>
 
                 <div style="font-size:13px; font-weight:bold; color:var(--navy); margin-bottom:5px;"><i class="fa-solid fa-clock-rotate-left"></i> ความเคลื่อนไหวระบบ (System Logs)</div>
                 <button class="btn-camera" style="background:#0284c7; margin-bottom:5px;" onclick="loadAdminLogs()"><i class="fa-solid fa-magnifying-glass"></i> ดูประวัติกิจกรรมล่าสุด</button>
@@ -245,11 +232,21 @@
     <div id="dummy-reader" style="display:none;"></div>
 
     <script>
-        // 🔴 นำ URL ของ API ที่ Deploy แบบ "ทุกคน (Anyone)" มาวางตรงนี้
-        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2fkTlnjr8yiSdMm6kkR8I9mBwECq9FvRjOTLuLQci/exec";
+        // 🔴 นำ URL ของ API ที่ Deploy ล่าสุดมาวางตรงนี้ 
+        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2FkTlnjr8yiSdMm6kkR8I9mBwEcq9FvRjOTLuLQci/exec";
 
         function getToken() { return localStorage.getItem("bpp_token") || sessionStorage.getItem("bpp_token"); }
         function escapeHtml(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+        // 🔴 ระบบตรวจสอบ Error อัจฉริยะ (ดักจับ Token เสื่อมสภาพ)
+        function checkTokenError(data) {
+            if (data && data.error && (data.error.includes("เซสชัน") || data.error.includes("Token"))) {
+                localStorage.removeItem("bpp_token"); sessionStorage.removeItem("bpp_token");
+                alert("⚠️ เซสชันการเชื่อมต่อหมดอายุ (หรือระบบมีการอัปเดตใหม่) กรุณาลงชื่อเข้าใช้งานใหม่อีกครั้ง");
+                location.reload(); return true;
+            }
+            return false;
+        }
 
         window.onload = function() {
             let token = getToken();
@@ -257,7 +254,7 @@
                 document.getElementById("tab-auth").classList.remove("active");
                 document.getElementById("tab-search").classList.add("active");
                 document.getElementById("mainNav").style.display = "flex";
-                document.getElementById("liveUserBar").style.display = "block"; // โชว์แถบคนออนไลน์
+                document.getElementById("liveUserBar").style.display = "block"; 
                 
                 const role = localStorage.getItem("bpp_role");
                 document.getElementById("accountDetailsZone").innerHTML = `<p><b>ชื่อเจ้าหน้าที่:</b> ${escapeHtml(localStorage.getItem("bpp_user"))}</p><p><b>สังกัด/แผนก:</b> ${escapeHtml(localStorage.getItem("bpp_dept"))}</p><p><b>สิทธิ์การใช้งาน:</b> <span style="color:#166534; font-weight:bold;">${escapeHtml(role)}</span></p>`;
@@ -267,9 +264,10 @@
                     document.getElementById("nav-profile").innerHTML = '<i class="fa-solid fa-crown"></i><span>แอดมิน</span>';
                 }
                 loadDash();
-                fetch(`${API_URL}?action=getConfig&token=${token}`).then(r=>r.json()).then(d=> document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(d.text)||"ระบบพร้อมใช้งาน"}`);
-                liveSync();
-                setInterval(liveSync, 15000); 
+                fetch(`${API_URL}?action=getConfig&token=${token}`).then(r=>r.json()).then(d=> {
+                    if(!checkTokenError(d)) document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(d.text)||"ระบบพร้อมใช้งาน"}`;
+                });
+                liveSync(); setInterval(liveSync, 15000); 
             } else { 
                 document.getElementById("mainNav").style.display = "none"; 
                 document.getElementById("liveUserBar").style.display = "none";
@@ -278,13 +276,11 @@
 
         async function fetchSafePOST(payload) {
             try {
-                const response = await fetch(API_URL, { 
-                    method: "POST", 
-                    headers: { "Content-Type": "text/plain;charset=utf-8" }, 
-                    body: JSON.stringify(payload) 
-                });
-                return await response.json();
-            } catch (err) { throw new Error("การเชื่อมต่อเซิร์ฟเวอร์ขัดข้อง: โปรดตรวจสอบลิงก์ API_URL"); }
+                const response = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
+                const data = await response.json();
+                if(checkTokenError(data)) throw new Error("เซสชันหมดอายุ");
+                return data;
+            } catch (err) { throw new Error(err.message === "เซสชันหมดอายุ" ? err.message : "การเชื่อมต่อเซิร์ฟเวอร์ขัดข้อง"); }
         }
 
         function toggleAuthForm() {
@@ -296,9 +292,9 @@
         function verifyUser() {
             const name = document.getElementById("loginName").value.trim(); 
             const remember = document.getElementById("chkRemember").checked;
-            if(!name) return alert("กรุณาพิมพ์ยศและชื่อของท่านให้ครบถ้วน");
+            if(!name) return alert("กรุณาพิมพ์ยศและชื่อของท่าน");
             
-            document.getElementById("btnVerify").innerHTML = "กำลังค้นหารายชื่อในระบบ...";
+            document.getElementById("btnVerify").innerHTML = "กำลังเข้าสู่ระบบ...";
             fetch(`${API_URL}?action=login&name=${encodeURIComponent(name)}`)
                 .then(r => r.json())
                 .then(res => {
@@ -306,71 +302,39 @@
                         let storage = remember ? localStorage : sessionStorage;
                         storage.setItem("bpp_token", res.token); storage.setItem("bpp_user", res.user); storage.setItem("bpp_role", res.role); storage.setItem("bpp_dept", res.dept);
                         location.reload(); 
-                    } else { 
-                        alert(res.message); 
-                        document.getElementById("btnVerify").innerHTML = "ลงชื่อเข้าปฏิบัติงาน"; 
-                    }
-                })
-                .catch((err) => { 
-                    alert("การเชื่อมต่อล้มเหลว: " + err.message); 
-                    document.getElementById("btnVerify").innerHTML = "ระบบขัดข้อง ลองอีกครั้ง"; 
-                }); 
+                    } else { alert(res.message); document.getElementById("btnVerify").innerHTML = "ลงชื่อเข้าปฏิบัติงาน"; }
+                }).catch(err => { alert("ล้มเหลว: " + err.message); document.getElementById("btnVerify").innerHTML = "ลองอีกครั้ง"; }); 
         }
 
         function submitRegistration() {
-            const name = document.getElementById("regName").value.trim();
-            const dept = document.getElementById("regDept").value;
+            const name = document.getElementById("regName").value.trim(); const dept = document.getElementById("regDept").value;
             if(!name || !dept) return alert("กรุณากรอกยศชื่อ และเลือกสังกัด");
-
             document.getElementById("btnRegister").innerHTML = "กำลังลงทะเบียน...";
-            fetchSafePOST({ action: "self_register", name: name, dept: dept })
-            .then(d => {
-                if(d.status === "success") {
-                    alert(d.message); toggleAuthForm(); document.getElementById("loginName").value = name;
-                } else { alert("เกิดข้อผิดพลาด: " + d.message); }
+            fetchSafePOST({ action: "self_register", name: name, dept: dept }).then(d => {
+                if(d.status === "success") { alert(d.message); toggleAuthForm(); document.getElementById("loginName").value = name; } 
+                else { alert("ข้อผิดพลาด: " + d.message); }
                 document.getElementById("btnRegister").innerHTML = "ส่งข้อมูลลงทะเบียน";
             }).catch(e => { alert(e.message); document.getElementById("btnRegister").innerHTML = "ส่งข้อมูลลงทะเบียน"; });
         }
 
         function logoutManual() { if(confirm("ต้องการออกจากระบบ?")) { fetch(`${API_URL}?action=logout&token=${getToken()}`); localStorage.clear(); sessionStorage.clear(); location.reload(); } }
 
-        // 🔴 ระบบกล้องอัจฉริยะ (เปิดปิดตามแท็บที่เรียกใช้)
-        let scannerAssign = null;
-        let scannerScan = null;
-        const html5QrCodeDummy = new Html5Qrcode("dummy-reader"); // Engine สำหรับอ่านจากไฟล์ภาพ
-
+        let scannerAssign = null; let scannerScan = null; const html5QrCodeDummy = new Html5Qrcode("dummy-reader"); 
         function stopAllScanners() {
             if (scannerAssign) { scannerAssign.clear(); scannerAssign = null; document.getElementById("reader-assign").innerHTML = ""; }
             if (scannerScan) { scannerScan.clear(); scannerScan = null; document.getElementById("reader-scan").innerHTML = ""; }
         }
-
-        function initScannerAssign() {
-            stopAllScanners();
-            scannerAssign = new Html5QrcodeScanner("reader-assign", { fps: 10, qrbox: { width: 250, height: 250 } }, false);
-            scannerAssign.render((text) => { scannerAssign.pause(); runAssign(text); setTimeout(() => scannerAssign.resume(), 2000); });
-        }
-
-        function initScannerScan() {
-            stopAllScanners();
-            scannerScan = new Html5QrcodeScanner("reader-scan", { fps: 10, qrbox: { width: 250, height: 250 } }, false);
-            scannerScan.render((text) => { scannerScan.pause(); runScan(text); setTimeout(() => scannerScan.resume(), 2000); });
-        }
+        function initScannerAssign() { stopAllScanners(); scannerAssign = new Html5QrcodeScanner("reader-assign", { fps: 10, qrbox: { width: 250, height: 250 } }, false); scannerAssign.render((text) => { scannerAssign.pause(); runAssign(text); setTimeout(() => scannerAssign.resume(), 2000); }); }
+        function initScannerScan() { stopAllScanners(); scannerScan = new Html5QrcodeScanner("reader-scan", { fps: 10, qrbox: { width: 250, height: 250 } }, false); scannerScan.render((text) => { scannerScan.pause(); runScan(text); setTimeout(() => scannerScan.resume(), 2000); }); }
 
         function switchTab(id, el) {
             const role = localStorage.getItem("bpp_role");
-            if(id==='tab-assign' && role!=='ธุรการ' && role!=='Admin') return alert("⚠️ หน้าผูกเรื่องจำกัดเฉพาะสิทธิ์ [ธุรการ / Admin]");
+            if(id==='tab-assign' && role!=='ธุรการ' && role!=='Admin') return alert("⚠️ หน้าผูกเรื่องจำกัดเฉพาะ [ธุรการ / Admin]");
             if(id==='tab-scan' && role!=='หน้าห้อง' && role!=='ธุรการ' && role!=='Admin' && role!=='เจ้าของเรื่อง') return alert("⚠️ การอัปเดตจำกัดเฉพาะเจ้าหน้าที่ปฏิบัติงาน");
-            
-            document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); 
-            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
             document.getElementById(id).classList.add('active'); el.classList.add('active');
-            
-            // สั่งกล้องทำงานเมื่อเข้าสู่แท็บนั้นๆ และปิดเมื่อออก
             stopAllScanners();
-            if(id==='tab-search') loadDash(true);
-            if(id==='tab-analytics') loadAnalytics();
-            if(id==='tab-assign') initScannerAssign();
-            if(id==='tab-scan') initScannerScan();
+            if(id==='tab-search') loadDash(true); if(id==='tab-analytics') loadAnalytics(); if(id==='tab-assign') initScannerAssign(); if(id==='tab-scan') initScannerScan();
         }
 
         function getStatusClass(s) { if(s.includes("อนุมัติ")||s.includes("รับ")) return "status-ok"; if(s.includes("ตีกลับ")||s.includes("แก้ไข")) return "status-err"; return "status-warn"; }
@@ -387,7 +351,7 @@
             let token = getToken(); if(!token) return;
             let openIds = Array.from(document.querySelectorAll('.accordion-content.expanded')).map(el => el.previousElementSibling.getAttribute('data-id'));
             fetch(`${API_URL}?action=getDash&token=${token}`).then(r=>r.json()).then(data=>{
-                if(data.error) return; 
+                if(checkTokenError(data)) return; 
                 document.getElementById('dash-total').innerText=data.total; document.getElementById('dash-in').innerText=data.in;
                 let topHtml = "";
                 if(data.urgent.length > 0) { let uH = ""; data.urgent.forEach(f => uH += buildFileHTML(f)); topHtml += `<div class="accordion-item"><button class="accordion-btn" data-id="urgent" style="background:#fef2f2; color:#dc2626;" onclick="toggleAcc(this)"><div>🔥 แฟ้มด่วนที่สุด <span class="badge" style="background:#dc2626;">${data.urgent.length}</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${uH}</div></div>`; }
@@ -404,17 +368,18 @@
         function liveSync() { 
             let token = getToken(); if(!token) return; 
             fetch(`${API_URL}?action=ping&token=${token}`).then(r=>r.json()).then(res => {
-                // 🔴 อัปเดตแถบผู้ใช้งานแบบ Real-time
-                document.getElementById('onlineCount').innerText = res.count;
-                document.getElementById('onlineNames').innerText = `( ${escapeHtml(res.text)} )`;
+                if(checkTokenError(res)) return;
+                document.getElementById('onlineCount').innerText = res.count || 0;
+                document.getElementById('onlineNames').innerText = res.text ? `( ${escapeHtml(res.text)} )` : "";
             });
             if(document.getElementById("tab-search").classList.contains("active")) loadDash(true); 
-            if(document.getElementById("tab-analytics").classList.contains("active")) loadAnalytics(true); 
+            if(document.getElementById("tab-analytics").classList.contains("active")) loadAnalytics(); 
         }
 
         function loadAnalytics() {
             let token = getToken(); if(!token) return;
             fetch(`${API_URL}?action=getAnalytics&token=${token}`).then(r=>r.json()).then(data=>{
+                if(checkTokenError(data)) return;
                 let html = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:10px;"><tr style="background:#f1f5f9; color:var(--navy);"><th style="padding:8px; text-align:left;">แผนก</th><th style="padding:8px; text-align:center;">รวม</th><th style="padding:8px; text-align:center;">เสร็จ</th><th style="padding:8px; text-align:center;">ค้าง</th></tr>`;
                 for(let dept in data) { html += `<tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:8px; font-weight:600;">${escapeHtml(dept)}</td><td style="padding:8px; text-align:center;">${data[dept].total}</td><td style="padding:8px; text-align:center; color:#166534;">${data[dept].completed}</td><td style="padding:8px; text-align:center; color:#dc2626;">${data[dept].pending}</td></tr>`; }
                 document.getElementById('analyticsContent').innerHTML = html + `</table>`;
@@ -426,8 +391,9 @@
             document.getElementById("historyOverlay").classList.add("active"); document.getElementById("historyModal").classList.add("active");
             document.getElementById("historyTitle").innerText = `ประวัติ: [${id}] ${title}`; document.getElementById("historyTimeline").innerHTML = `<div style="text-align:center; padding:20px;">กำลังโหลด...</div>`;
             fetch(`${API_URL}?action=getHistory&fileId=${encodeURIComponent(id)}&token=${token}`).then(r=>r.json()).then(data => {
+                if(checkTokenError(data)) return;
                 let html = "";
-                data.forEach(h => { let imgLink = h.imgUrl ? `<br><a href="${h.imgUrl}" target="_blank" style="font-size:11px; color:#2563eb;"><i class="fa-solid fa-image"></i> เปิดดูภาพแนบ</a>` : ""; html += `<div class="timeline-item"><div class="timeline-time">${escapeHtml(h.time)} • ${escapeHtml(h.loc)}</div><div class="timeline-status">${escapeHtml(h.status)}</div><div class="timeline-user"><i class="fa-solid fa-user-check"></i> ${escapeHtml(h.user)}</div>${imgLink}</div>`; });
+                data.forEach(h => { let imgLink = h.imgUrl ? `<br><a href="${h.imgUrl}" target="_blank" style="font-size:11px; color:#2563eb;"><i class="fa-solid fa-image"></i> เปิดดูภาพ</a>` : ""; html += `<div class="timeline-item"><div class="timeline-time">${escapeHtml(h.time)} • ${escapeHtml(h.loc)}</div><div class="timeline-status">${escapeHtml(h.status)}</div><div class="timeline-user"><i class="fa-solid fa-user-check"></i> ${escapeHtml(h.user)}</div>${imgLink}</div>`; });
                 document.getElementById("historyTimeline").innerHTML = html || "<div style='text-align:center;'>ยังไม่มีประวัติ</div>";
             });
         }
@@ -439,16 +405,12 @@
         }
 
         function runScan(text) { 
-            const scanStatus = document.querySelector('input[name="scanStatus"]:checked').value;
-            const imgInput = document.getElementById("correctionImage");
-            
+            const scanStatus = document.querySelector('input[name="scanStatus"]:checked').value; const imgInput = document.getElementById("correctionImage");
             if(scanStatus === "ส่งกลับแก้ไข" && imgInput.files.length > 0) {
                 const reader = new FileReader();
                 reader.onload = function(e) { fetchSafePOST({ action: "scan", fileId: text, dept: "", scanStatus: scanStatus, loc: document.getElementById("locScan").value, imageBase64: e.target.result, imageMime: imgInput.files[0].type, token: getToken() }).then(d=>{ alert(d.message); loadDash(); }); };
                 reader.readAsDataURL(imgInput.files[0]);
-            } else { 
-                fetchSafePOST({ action: "scan", fileId: text, dept: "", scanStatus: scanStatus, loc: document.getElementById("locScan").value, token: getToken() }).then(d=>{ alert(d.message); loadDash(); });
-            }
+            } else { fetchSafePOST({ action: "scan", fileId: text, dept: "", scanStatus: scanStatus, loc: document.getElementById("locScan").value, token: getToken() }).then(d=>{ alert(d.message); loadDash(); }); }
         }
         function manualScan() { const v = document.getElementById("manualIdScan").value.trim().toUpperCase(); if(v) runScan(v); }
         function manualAssign() { 
@@ -457,39 +419,24 @@
             fetchSafePOST({ action:"assign", fileId:v, title:t, urgency:document.getElementById("urgencyAssign").value, dept: "", loc:document.getElementById("locAssign").value, token: getToken() }).then(d=>{ alert(d.message); loadDash(); document.getElementById("manualIdAssign").value=""; document.getElementById("newDocTitle").value=""; }); 
         }
 
-        // 🔴 ระบบสแกนจากไฟล์รูปภาพ (เมื่อกล้องใช้งานไม่ได้)
-        document.getElementById('qr-assign').addEventListener('change', e => { 
-            if(e.target.files[0]) { html5QrCodeDummy.scanFile(e.target.files[0], true).then(runAssign).catch(err => alert("ไม่พบ QR Code ในรูปภาพ")); e.target.value=''; }
-        });
-        document.getElementById('qr-scan').addEventListener('change', e => { 
-            if(e.target.files[0]) { html5QrCodeDummy.scanFile(e.target.files[0], true).then(runScan).catch(err => alert("ไม่พบ QR Code ในรูปภาพ")); e.target.value=''; }
-        });
+        document.getElementById('qr-assign').addEventListener('change', e => { if(e.target.files[0]) { html5QrCodeDummy.scanFile(e.target.files[0], true).then(runAssign).catch(err => alert("ไม่พบ QR Code")); e.target.value=''; } });
+        document.getElementById('qr-scan').addEventListener('change', e => { if(e.target.files[0]) { html5QrCodeDummy.scanFile(e.target.files[0], true).then(runScan).catch(err => alert("ไม่พบ QR Code")); e.target.value=''; } });
 
-        let sTimeout; function debounceSearch() { let token = getToken(); if(!token) return; clearTimeout(sTimeout); const k = document.getElementById("searchInput").value.trim(); if(!k) { document.getElementById("miniDashboard").style.display="block"; document.getElementById("searchResults").innerHTML=""; return; } document.getElementById("miniDashboard").style.display="none"; sTimeout = setTimeout(() => { fetch(`${API_URL}?action=search&keyword=${encodeURIComponent(k)}&token=${token}`).then(r => r.json()).then(res => { let html = ""; if(!res || res.length===0) html = '<div style="text-align:center; color:#ef4444; padding:20px; font-weight:bold;">❌ ไม่พบข้อมูลแฟ้ม</div>'; else res.forEach(f => { html += `<div class="accordion-item" style="padding:12px;">${buildFileHTML(f)}</div>`; }); document.getElementById("searchResults").innerHTML = html; }); }, 400); }
+        let sTimeout; function debounceSearch() { let token = getToken(); if(!token) return; clearTimeout(sTimeout); const k = document.getElementById("searchInput").value.trim(); if(!k) { document.getElementById("miniDashboard").style.display="block"; document.getElementById("searchResults").innerHTML=""; return; } document.getElementById("miniDashboard").style.display="none"; sTimeout = setTimeout(() => { fetch(`${API_URL}?action=search&keyword=${encodeURIComponent(k)}&token=${token}`).then(r => r.json()).then(res => { if(checkTokenError(res)) return; let html = ""; if(!res || res.length===0) html = '<div style="text-align:center; color:#ef4444; padding:20px; font-weight:bold;">❌ ไม่พบข้อมูลแฟ้ม</div>'; else res.forEach(f => { html += `<div class="accordion-item" style="padding:12px;">${buildFileHTML(f)}</div>`; }); document.getElementById("searchResults").innerHTML = html; }); }, 400); }
 
         function importCSV() {
-            const file = document.getElementById('csvFileInput').files[0];
-            if(!file) return alert("กรุณาเลือกไฟล์ CSV");
-            const reader = new FileReader();
+            const file = document.getElementById('csvFileInput').files[0]; if(!file) return alert("กรุณาเลือกไฟล์ CSV"); const reader = new FileReader();
             reader.onload = function(e) {
-                const lines = e.target.result.split('\n');
-                let users = [];
-                for(let i=1; i<lines.length; i++) { 
-                    let cols = lines[i].split(',');
-                    if(cols.length >= 3 && cols[0].trim() !== "") {
-                        users.push({ name: cols[0].trim(), dept: cols[1].trim(), role: cols[2].trim() });
-                    }
-                }
-                if(users.length === 0) return alert("ไม่พบข้อมูลในไฟล์ หรือรูปแบบไม่ถูกต้อง");
-                if(confirm(`เตรียมนำเข้า ${users.length} รายชื่อ ยืนยันหรือไม่?`)) {
-                    fetchSafePOST({action:"admin_import_users", users: users, token: getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); });
-                }
-            };
-            reader.readAsText(file);
+                const lines = e.target.result.split('\n'); let users = [];
+                for(let i=1; i<lines.length; i++) { let cols = lines[i].split(','); if(cols.length >= 3 && cols[0].trim() !== "") { users.push({ name: cols[0].trim(), dept: cols[1].trim(), role: cols[2].trim() }); } }
+                if(users.length === 0) return alert("ไม่พบข้อมูล");
+                if(confirm(`เตรียมนำเข้า ${users.length} รายชื่อ ยืนยันหรือไม่?`)) { fetchSafePOST({action:"admin_import_users", users: users, token: getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); }); }
+            }; reader.readAsText(file);
         }
 
         function loadAdminUsers() {
             fetch(`${API_URL}?action=admin_get_users&token=${getToken()}`).then(r=>r.json()).then(data=>{
+                if(checkTokenError(data)) return;
                 let html = `<table style="width:100%; border-collapse:collapse;"><tr style="background:#f8fafc;"><th style="padding:5px;text-align:left;">ผู้ใช้งาน</th><th>สถานะ/สิทธิ์</th></tr>`;
                 data.forEach(u => {
                     let roleDropdown = `<select onchange="updateRole('${u.name}', this.value)" style="font-size:11px; padding:4px; border-radius:4px; border:1px solid #cbd5e1; outline:none; background:${u.role==='รออนุมัติ'?'#fee2e2':'#f0fdf4'}; color:${u.role==='รออนุมัติ'?'#991b1b':'#166534'}; font-weight:bold;">
@@ -501,47 +448,27 @@
                         <option value="Admin" ${u.role==='Admin'?'selected':''}>Admin</option>
                     </select>`;
                     if(u.role === "Admin" && u.name.replace(/\s+/g,"") === localStorage.getItem("bpp_user").replace(/\s+/g,"")) roleDropdown = "<b><i class='fa-solid fa-crown' style='color:gold;'></i> Root Admin</b>"; 
-                    
-                    let delBtn = (u.role === "Admin" && u.name.replace(/\s+/g,"") === localStorage.getItem("bpp_user").replace(/\s+/g,"")) ? "" : `<button onclick="deleteUser('${u.name}')" style="background:#dc2626; color:white; border:none; border-radius:4px; padding:4px 8px; margin-left:5px; cursor:pointer;" title="ลบบัญชีนี้"><i class="fa-solid fa-trash"></i></button>`;
-
+                    let delBtn = (u.role === "Admin" && u.name.replace(/\s+/g,"") === localStorage.getItem("bpp_user").replace(/\s+/g,"")) ? "" : `<button onclick="deleteUser('${u.name}')" style="background:#dc2626; color:white; border:none; border-radius:4px; padding:4px 8px; margin-left:5px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>`;
                     html += `<tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:5px; font-size:12px; font-weight:600; color:var(--navy);">${escapeHtml(u.name)}<br><span style="color:#64748b; font-weight:normal; font-size:10px;">${escapeHtml(u.dept)}</span></td><td style="text-align:right;">${roleDropdown}${delBtn}</td></tr>`;
-                });
-                document.getElementById('adminUserList').innerHTML = html + `</table>`;
+                }); document.getElementById('adminUserList').innerHTML = html + `</table>`;
             });
         }
 
-        function updateRole(name, newRole) {
-            if(!confirm(`ต้องการเปลี่ยนสิทธิ์ของ [ ${name} ] เป็น [ ${newRole} ] ใช่หรือไม่?`)) return loadAdminUsers(); 
-            fetchSafePOST({action:"admin_update_role", targetName:name, newRole:newRole, token:getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); });
-        }
-
-        function deleteUser(name) {
-            if(!confirm(`⚠️ คำเตือน: คุณต้องการ "ลบ" บัญชีของ [ ${name} ] ออกจากระบบถาวรใช่หรือไม่?`)) return;
-            fetchSafePOST({action:"admin_delete_user", targetName:name, token:getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); });
-        }
-
-        function archiveSystem() {
-            if(!confirm("ยืนยันการจัดเก็บแฟ้มที่ 'เสร็จสิ้น' แล้วเข้าคลังถาวร?")) return;
-            fetchSafePOST({action:"admin_archive", token:getToken()}).then(d=>{ alert(d.message); loadDash(); });
-        }
+        function updateRole(name, newRole) { if(!confirm(`ต้องการเปลี่ยนสิทธิ์ของ [ ${name} ] เป็น [ ${newRole} ]?`)) return loadAdminUsers(); fetchSafePOST({action:"admin_update_role", targetName:name, newRole:newRole, token:getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); }); }
+        function deleteUser(name) { if(!confirm(`ลบ ${name} ออกจากระบบถาวร?`)) return; fetchSafePOST({action:"admin_delete_user", targetName:name, token:getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); }); }
+        function archiveSystem() { if(!confirm("จัดเก็บแฟ้มที่ 'เสร็จสิ้น' เข้าคลังถาวร?")) return; fetchSafePOST({action:"admin_archive", token:getToken()}).then(d=>{ alert(d.message); loadDash(); }); }
 
         function loadAdminLogs() {
             fetch(`${API_URL}?action=admin_get_syslogs&token=${getToken()}`).then(r=>r.json()).then(data=>{
-                if(data.error) return alert(data.error);
-                let html = "";
-                data.forEach(l => { html += `<div style="border-bottom:1px dashed #e2e8f0; padding:4px 0;"><span style="color:#64748b;">${escapeHtml(l.time)}</span> <b style="color:var(--navy);">${escapeHtml(l.fileId)}</b> ➔ ${escapeHtml(l.status)} โดย ${escapeHtml(l.user)}</div>`; });
+                if(checkTokenError(data)) return;
+                let html = ""; data.forEach(l => { html += `<div style="border-bottom:1px dashed #e2e8f0; padding:4px 0;"><span style="color:#64748b;">${escapeHtml(l.time)}</span> <b style="color:var(--navy);">${escapeHtml(l.fileId)}</b> ➔ ${escapeHtml(l.status)} โดย ${escapeHtml(l.user)}</div>`; });
                 document.getElementById('adminLogList').innerHTML = html || "ไม่มีประวัติการทำงาน";
             });
         }
         
         function updateAnnouncement() { 
-            const text = document.getElementById("announcementInput").value.trim();
-            if(!text) return alert("กรุณาพิมพ์ข้อความที่ต้องการประกาศ");
-            fetchSafePOST({ action:"announce", text:text, token:getToken() }).then(d=>{ 
-                alert(d.message); 
-                document.getElementById("marqueeText").innerHTML = `<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(text)}`;
-                document.getElementById("announcementInput").value = "";
-            }); 
+            const text = document.getElementById("announcementInput").value.trim(); if(!text) return alert("กรุณาพิมพ์ข้อความที่ต้องการประกาศ");
+            fetchSafePOST({ action:"announce", text:text, token:getToken() }).then(d=>{ alert(d.message); document.getElementById("marqueeText").innerHTML = `<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(text)}`; document.getElementById("announcementInput").value = ""; }); 
         }
     </script>
 </body>
