@@ -96,7 +96,6 @@
 
     <datalist id="userList"></datalist>
 
-    <!-- 🔴 แก้ข้อความตั้งต้นตอนยังไม่เข้าระบบเป็นอันนี้ครับ -->
     <div class="marquee-container"><div class="marquee-text" id="marqueeText"><i class="fa-solid fa-lock"></i> กรุณาเข้าสู่ระบบเพื่อปฏิบัติงาน</div></div>
     
     <div class="header">
@@ -275,7 +274,12 @@
             }
         }
 
+        // ✅ แก้ไข: window.onload — set marquee default ก่อนเป็นอันดับแรกเสมอ
         window.onload = function() {
+            // ✅ FIX: ตั้งค่าข้อความ marquee default ก่อนทำอะไรทั้งหมด
+            // เพื่อป้องกัน race condition กับ async fetch ที่อาจ override ข้อความก่อนที่ else branch จะทำงาน
+            document.getElementById("marqueeText").innerHTML = `<i class="fa-solid fa-lock"></i> กรุณาเข้าสู่ระบบเพื่อปฏิบัติงาน`;
+
             let token = getToken();
             if(token) {
                 document.getElementById("tab-auth").classList.remove("active");
@@ -299,16 +303,18 @@
                 }).catch(e=>{});
 
                 loadDash();
+
+                // ✅ FIX: เพิ่ม null/undefined check ก่อน set marquee
+                // getConfig จะ override ข้อความ default ก็ต่อเมื่อ login แล้วและได้ข้อมูลจริงเท่านั้น
                 fetchSafePOST({action:"getConfig", token:token}).then(d=> {
-                    if(d.text) document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(d.text)}`;
+                    if(d && d.text) document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(d.text)}`;
                 }).catch(e=>{});
                 
                 liveSync(); setInterval(liveSync, 15000); 
             } else { 
                 document.getElementById("mainNav").style.display = "none"; 
                 document.getElementById("liveUserBar").style.display = "none";
-                // 🔴 ให้ข้อความนิ่งๆ สำหรับตอนยังไม่ล็อกอิน
-                document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-lock"></i> กรุณาเข้าสู่ระบบเพื่อปฏิบัติงาน`;
+                // ✅ ข้อความ marquee ถูก set ไว้แล้วด้านบนสุด ไม่ต้อง set ซ้ำที่นี่
             }
         };
 
