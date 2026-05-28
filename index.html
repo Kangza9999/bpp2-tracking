@@ -12,11 +12,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Sarabun', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
         
-        /* แถบตัววิ่ง ปชส. แบบ Quantum Gradient */
-        .marquee-container { 
-            background: linear-gradient(270deg, #dc2626, #2563eb, #16a34a, #d97706, #9333ea, #be123c);
-            background-size: 1200% 1200%; animation: gradientShift 30s ease infinite; color: white; padding: 10px 0; font-size: 14px; font-weight: 700; overflow: hidden; white-space: nowrap; position: relative; z-index: 101; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 2px solid rgba(255,255,255,0.2);
-        }
+        .marquee-container { background: linear-gradient(270deg, #dc2626, #2563eb, #16a34a, #d97706, #9333ea, #be123c); background-size: 1200% 1200%; animation: gradientShift 30s ease infinite; color: white; padding: 10px 0; font-size: 14px; font-weight: 700; overflow: hidden; white-space: nowrap; position: relative; z-index: 101; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 2px solid rgba(255,255,255,0.2); }
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); letter-spacing: 0.5px; }
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
@@ -58,9 +54,10 @@
         .tag { background: #f1f5f9; padding: 3px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #e2e8f0; font-weight: 500; }
         .tag.status-ok { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; } 
         .tag.status-warn { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; } 
-        .tag.status-info { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; } 
         .tag.status-err { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; } 
         .urg-red { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 700; }
+        .urg-orange { background: #ffedd5; color: #ea580c; border: 1px solid #fdba74; font-weight: 700; }
+        .urg-yellow { background: #fef9c3; color: #ca8a04; border: 1px solid #fde047; font-weight: 700; }
         
         .input-group { display: flex; gap: 8px; margin-bottom: 12px; }
         .input-group .form-control { margin-bottom: 0; }
@@ -96,6 +93,9 @@
 </head>
 <body>
 
+    <!-- 🔴 Datalist สำหรับดึงรายชื่อคนในระบบมาทำ Dropdown อัตโนมัติ (เพิ่มใหม่) -->
+    <datalist id="userList"></datalist>
+
     <div class="marquee-container"><div class="marquee-text" id="marqueeText"><i class="fa-solid fa-satellite-dish"></i> กำลังเชื่อมต่อข้อมูล...</div></div>
     
     <div class="header">
@@ -109,10 +109,11 @@
 
     <div class="container">
         
+        <!-- แท็บยืนยันตัวตน -->
         <div id="tab-auth" class="tab-content active">
             <div class="card" id="loginCard">
                 <div class="card-title"><i class="fa-solid fa-right-to-bracket"></i> เข้าสู่ระบบสารบรรณ</div>
-                <input type="text" id="loginName" class="form-control" placeholder="ยศชื่อ (พิมพ์ติดกัน ไม่ต้องใส่นามสกุล)" style="text-align:center; font-size:16px; font-weight:bold;">
+                <input type="text" id="loginName" class="form-control" placeholder="ยศชื่อ (พิมพ์ติดกัน ไม่ต้องใส่นามสกุล)" style="text-align:center; font-size:16px; font-weight:bold;" list="userList">
                 <div class="remember-box"><input type="checkbox" id="chkRemember" checked><label for="chkRemember">จดจำบัญชีในอุปกรณ์นี้เสมอ</label></div>
                 <button id="btnVerify" class="btn-action" onclick="verifyUser()">ลงชื่อเข้าปฏิบัติงาน</button>
                 <div class="auth-switch" onclick="toggleAuthForm()"><i class="fa-solid fa-user-plus"></i> ลงทะเบียนครั้งแรก (รอยืนยันสิทธิ์)</div>
@@ -136,8 +137,9 @@
             </div>
         </div>
 
+        <!-- แดชบอร์ด -->
         <div id="tab-search" class="tab-content">
-            <div class="search-box"><i class="fa-solid fa-search"></i><input type="text" id="searchInput" class="form-control" placeholder="ค้นหาเลขแฟ้ม หรือเรื่อง..." onkeyup="debounceSearch()"></div>
+            <div class="search-box"><i class="fa-solid fa-search"></i><input type="text" id="searchInput" class="form-control" placeholder="ค้นหาเลขแฟ้ม, ชื่อเรื่อง หรือชื่อเจ้าของเรื่อง..." onkeyup="debounceSearch()"></div>
             <div id="miniDashboard">
                 <div class="dash-summary">
                     <div class="dash-box"><div class="dash-num" id="dash-total">0</div><div class="dash-label">แฟ้มดำเนินการ</div></div>
@@ -150,21 +152,30 @@
             <div id="searchResults" style="margin-top: 10px;"></div>
         </div>
 
+        <!-- 🔴 ผูกเรื่อง (เพิ่มช่องใส่ชื่อเจ้าของเรื่อง) -->
         <div id="tab-assign" class="tab-content">
             <div class="card">
                 <div class="card-title" style="color: var(--purple);"><i class="fa-solid fa-folder-plus"></i> ผูกเรื่องเข้าแฟ้ม</div>
                 <input type="text" id="newDocTitle" class="form-control" placeholder="พิมพ์ชื่อเรื่องที่เสนอ...">
+                
+                <div style="font-size:12px; font-weight:600; margin-bottom:5px;">เจ้าของเรื่อง (ผู้รับผิดชอบ):</div>
+                <input type="text" id="ownerAssign" class="form-control" placeholder="พิมพ์หรือเลือกชื่อเจ้าของเรื่อง..." list="userList">
+
                 <div style="display: flex; gap:10px;">
                     <div style="flex:1;"><div style="font-size:12px; font-weight:600; margin-bottom:5px;">ความเร่งด่วน:</div><select id="urgencyAssign" class="form-control"><option value="ปกติ">🟢 ปกติ</option><option value="ด่วน">🟡 ด่วน</option><option value="ด่วนมาก">🟠 ด่วนมาก</option><option value="ด่วนที่สุด">🔴 ด่วนที่สุด</option></select></div>
                     <div style="flex:1;"><div style="font-size:12px; font-weight:600; margin-bottom:5px;">พิกัด:</div><select id="locAssign" class="form-control"><option value="โต๊ะธุรการ">📍 โต๊ะธุรการ</option><option value="หน้าห้อง ผกก.">📍 หน้าห้อง ผกก.</option><option value="หน้าห้อง ผบก.">📍 หน้าห้อง ผบก.</option></select></div>
                 </div>
                 <hr class="divider">
-                <div class="input-group"><input type="text" id="manualIdAssign" class="form-control" placeholder="พิมพ์รหัสแฟ้ม" style="text-transform: uppercase;"><button class="btn-action" onclick="manualAssign()">ผูกข้อมูล</button></div>
+                <div class="input-group">
+                    <input type="text" id="manualIdAssign" class="form-control" placeholder="พิมพ์รหัสแฟ้ม" style="text-transform: uppercase;">
+                    <button class="btn-action" onclick="manualAssign()">ผูกข้อมูล</button>
+                </div>
                 <div class="camera-box-frame" id="cameraBoxAssign"><div id="reader-assign"></div></div>
-                <label class="btn-camera" style="background:var(--gold); color:var(--navy);"><i class="fa-solid fa-image"></i> อัปโหลดรูปภาพ QR (กรณีกล้องมีปัญหา) <input type="file" id="qr-assign" accept="image/*" style="display:none;"></label>
+                <label class="btn-camera" style="background:var(--gold); color:var(--navy);"><i class="fa-solid fa-image"></i> อัปโหลดรูปภาพ QR <input type="file" id="qr-assign" accept="image/*" style="display:none;"></label>
             </div>
         </div>
 
+        <!-- อัปเดตแฟ้ม -->
         <div id="tab-scan" class="tab-content">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-bolt"></i> อัปเดตสถานะแฟ้ม / เคลียร์แฟ้ม</div>
@@ -181,12 +192,13 @@
                 <select id="locScan" class="form-control" style="margin-top:10px;"><option value="โต๊ะธุรการ">📍 โต๊ะธุรการ</option><option value="หน้าห้อง ผกก.">📍 หน้าห้อง ผกก.</option><option value="หน้าห้อง ผบก.">📍 หน้าห้อง ผบก.</option></select>
                 <div class="input-group"><input type="text" id="manualIdScan" class="form-control" placeholder="ระบุเลขแฟ้ม" style="text-transform: uppercase;"><button class="btn-action" onclick="manualScan()">อัปเดต</button></div>
                 <div class="camera-box-frame" id="cameraBoxScan"><div id="reader-scan"></div></div>
-                <label class="btn-camera" style="background:var(--gold); color:var(--navy);"><i class="fa-solid fa-image"></i> อัปโหลดรูปภาพ QR (กรณีกล้องมีปัญหา) <input type="file" id="qr-scan" accept="image/*" style="display:none;"></label>
+                <label class="btn-camera" style="background:var(--gold); color:var(--navy);"><i class="fa-solid fa-image"></i> อัปโหลดรูปภาพ QR <input type="file" id="qr-scan" accept="image/*" style="display:none;"></label>
             </div>
         </div>
 
         <div id="tab-analytics" class="tab-content"><div class="card"><div class="card-title"><i class="fa-solid fa-chart-line"></i> แดชบอร์ดสถิติการเดินแฟ้ม</div><div id="analyticsContent"></div></div></div>
 
+        <!-- Profile & Admin Console -->
         <div id="tab-profile" class="tab-content">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-user-gear"></i> ข้อมูลบัญชีผู้เข้าใช้งาน</div>
@@ -218,6 +230,7 @@
         </div>
     </div>
 
+    <!-- เมนูด้านล่าง -->
     <div class="bottom-nav" id="mainNav">
         <div class="nav-item active" onclick="switchTab('tab-search', this)"><i class="fa-solid fa-chart-pie"></i><span>แดชบอร์ด</span></div>
         <div class="nav-item" onclick="switchTab('tab-assign', this)"><i class="fa-solid fa-folder-plus"></i><span>ผูกเรื่อง</span></div>
@@ -238,7 +251,8 @@
         function getToken() { return localStorage.getItem("bpp_token") || sessionStorage.getItem("bpp_token"); }
         function escapeHtml(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
-        // 🔴 ระบบตรวจสอบ Error อัจฉริยะ (ดักจับ Token เสื่อมสภาพ)
+        // ระบบดักจับ Error และกันการโหลดข้อมูลซ้อนกัน
+        let isFetching = false;
         function checkTokenError(data) {
             if (data && data.error && (data.error.includes("เซสชัน") || data.error.includes("Token"))) {
                 localStorage.removeItem("bpp_token"); sessionStorage.removeItem("bpp_token");
@@ -263,6 +277,15 @@
                     document.getElementById("adminPanel").style.display = "block"; 
                     document.getElementById("nav-profile").innerHTML = '<i class="fa-solid fa-crown"></i><span>แอดมิน</span>';
                 }
+                
+                // 🔴 โหลดรายชื่อผู้ใช้งานมาเก็บไว้ใน Datalist ทันทีที่เข้าแอป
+                fetch(`${API_URL}?action=get_user_names&token=${token}`).then(r=>r.json()).then(names=>{
+                    if(!checkTokenError(names) && Array.isArray(names)) {
+                        const dl = document.getElementById("userList"); dl.innerHTML = "";
+                        names.forEach(n => dl.appendChild(new Option(n)));
+                    }
+                }).catch(e=>{});
+
                 loadDash();
                 fetch(`${API_URL}?action=getConfig&token=${token}`).then(r=>r.json()).then(d=> {
                     if(!checkTokenError(d)) document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(d.text)||"ระบบพร้อมใช้งาน"}`;
@@ -340,17 +363,22 @@
         function getStatusClass(s) { if(s.includes("อนุมัติ")||s.includes("รับ")) return "status-ok"; if(s.includes("ตีกลับ")||s.includes("แก้ไข")) return "status-err"; return "status-warn"; }
         function toggleAcc(btn) { const c = btn.nextElementSibling, i = btn.querySelector('i'); if(c.classList.contains('expanded')){c.classList.remove('expanded');i.className="fa-solid fa-plus";} else {c.classList.add('expanded');i.className="fa-solid fa-minus";} }
 
+        // 🔴 เพิ่มป้ายชื่อ "เจ้าของเรื่อง" ใน HTML แฟ้ม
         function buildFileHTML(f) { 
             let eId = escapeHtml(f.id), eTitle = escapeHtml(f.title), eAction = escapeHtml(f.action), eLoc = escapeHtml(f.loc), eTime = escapeHtml(f.time);
             let sC = getStatusClass(eAction); let uH = f.urgency!=="ปกติ"?`<span class="tag" style="color:#dc2626;"><i class="fa-solid fa-bolt"></i> ${escapeHtml(f.urgency)}</span>`:`<span class="tag">ปกติ</span>`; 
             let imgBtn = f.img ? `<span class="tag" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;"><i class="fa-solid fa-image"></i> มีภาพ</span>` : "";
-            return `<div class="file-item" onclick="openHistory('${eId}', '${eTitle}')"><div class="file-title"><span style="color:var(--navy);">[ ${eId} ]</span> ${eTitle}</div><div class="file-meta"><span class="tag"><i class="fa-solid fa-location-dot"></i> ${eLoc}</span><span class="tag ${sC}"><i class="fa-solid fa-circle-info"></i> ${eAction}</span>${uH}<span class="tag"><i class="fa-regular fa-clock"></i> ${eTime}</span>${imgBtn}</div></div>`; 
+            let ownerTag = (f.owner && f.owner !== "ไม่ระบุ") ? `<span class="tag" style="background:#e0f2fe; color:#0284c7; border: 1px solid #bae6fd;"><i class="fa-solid fa-user-tag"></i> ${escapeHtml(f.owner)}</span>` : "";
+            
+            return `<div class="file-item" onclick="openHistory('${eId}', '${eTitle}')"><div class="file-title"><span style="color:var(--navy);">[ ${eId} ]</span> ${eTitle}</div><div class="file-meta"><span class="tag"><i class="fa-solid fa-location-dot"></i> ${eLoc}</span><span class="tag ${sC}"><i class="fa-solid fa-circle-info"></i> ${eAction}</span>${uH}<span class="tag"><i class="fa-regular fa-clock"></i> ${eTime}</span>${ownerTag}${imgBtn}</div></div>`; 
         }
 
         function loadDash(isSync = false) {
-            let token = getToken(); if(!token) return;
+            let token = getToken(); if(!token || isFetching) return;
+            isFetching = true;
             let openIds = Array.from(document.querySelectorAll('.accordion-content.expanded')).map(el => el.previousElementSibling.getAttribute('data-id'));
             fetch(`${API_URL}?action=getDash&token=${token}`).then(r=>r.json()).then(data=>{
+                isFetching = false;
                 if(checkTokenError(data)) return; 
                 document.getElementById('dash-total').innerText=data.total; document.getElementById('dash-in').innerText=data.in;
                 let topHtml = "";
@@ -362,7 +390,7 @@
                 document.getElementById('dash-accordion').innerHTML = html || "<div style='text-align:center; padding:15px; color:#94a3b8;'>ไม่มีประวัติแฟ้มค้างในคลาวด์</div>";
                 document.querySelectorAll('.accordion-btn').forEach(btn => { if(openIds.includes(btn.getAttribute('data-id'))) { btn.nextElementSibling.classList.add('expanded'); btn.querySelector('i').className = "fa-solid fa-minus"; } });
                 let now = new Date(); document.getElementById('lastUpdatedText').innerText = `อัปเดตล่าสุด ${now.getHours().toString().padStart(2,'0')+":"+now.getMinutes().toString().padStart(2,'0')} น.`;
-            });
+            }).catch(e => { isFetching = false; });
         }
 
         function liveSync() { 
@@ -413,10 +441,26 @@
             } else { fetchSafePOST({ action: "scan", fileId: text, dept: "", scanStatus: scanStatus, loc: document.getElementById("locScan").value, token: getToken() }).then(d=>{ alert(d.message); loadDash(); }); }
         }
         function manualScan() { const v = document.getElementById("manualIdScan").value.trim().toUpperCase(); if(v) runScan(v); }
+        
+        // 🔴 แก้ไขฟังก์ชันผูกเรื่อง ให้ส่งค่า "เจ้าของเรื่อง" ไปด้วย
         function manualAssign() { 
-            const v = document.getElementById("manualIdAssign").value.trim().toUpperCase(); const t = document.getElementById("newDocTitle").value.trim(); 
-            if(!v || !t) return alert("กรอกข้อมูลให้ครบ"); 
-            fetchSafePOST({ action:"assign", fileId:v, title:t, urgency:document.getElementById("urgencyAssign").value, dept: "", loc:document.getElementById("locAssign").value, token: getToken() }).then(d=>{ alert(d.message); loadDash(); document.getElementById("manualIdAssign").value=""; document.getElementById("newDocTitle").value=""; }); 
+            const v = document.getElementById("manualIdAssign").value.trim().toUpperCase(); 
+            const t = document.getElementById("newDocTitle").value.trim(); 
+            const o = document.getElementById("ownerAssign").value.trim() || "ไม่ระบุ"; // ดึงค่าเจ้าของเรื่อง
+            
+            if(!v || !t) return alert("กรุณาระบุเลขรหัสแฟ้ม และชื่อเรื่องให้ครบถ้วน"); 
+            fetchSafePOST({ action:"assign", fileId:v, title:t, urgency:document.getElementById("urgencyAssign").value, dept: "", loc:document.getElementById("locAssign").value, owner: o, token: getToken() }).then(d=>{ 
+                alert(d.message); loadDash(); document.getElementById("manualIdAssign").value=""; document.getElementById("newDocTitle").value=""; document.getElementById("ownerAssign").value="";
+            }); 
+        }
+
+        function runAssign(text) { 
+            const t = document.getElementById("newDocTitle").value.trim(); 
+            const o = document.getElementById("ownerAssign").value.trim() || "ไม่ระบุ";
+            if(!t) return alert("กรุณาพิมพ์ระบุชื่อเรื่องก่อนสแกนกล้อง"); 
+            fetchSafePOST({ action:"assign", fileId:text, title:t, urgency:document.getElementById("urgencyAssign").value, dept: "", loc:document.getElementById("locAssign").value, owner: o, token: getToken() }).then(d=>{ 
+                alert(d.message); loadDash(); document.getElementById("newDocTitle").value=""; document.getElementById("ownerAssign").value="";
+            }); 
         }
 
         document.getElementById('qr-assign').addEventListener('change', e => { if(e.target.files[0]) { html5QrCodeDummy.scanFile(e.target.files[0], true).then(runAssign).catch(err => alert("ไม่พบ QR Code")); e.target.value=''; } });
