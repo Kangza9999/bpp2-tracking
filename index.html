@@ -45,8 +45,11 @@
         .tag { background: #f1f5f9; padding: 3px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #e2e8f0; font-weight: 500; }
         .tag.status-ok { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; } 
         .tag.status-warn { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; } 
+        .tag.status-info { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; } 
         .tag.status-err { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; } 
         .urg-red { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 700; }
+        .urg-orange { background: #ffedd5; color: #ea580c; border: 1px solid #fdba74; font-weight: 700; }
+        .urg-yellow { background: #fef9c3; color: #ca8a04; border: 1px solid #fde047; font-weight: 700; }
         
         .input-group { display: flex; gap: 8px; margin-bottom: 12px; }
         .input-group .form-control { margin-bottom: 0; }
@@ -76,9 +79,6 @@
         .search-box { position: relative; margin-bottom: 10px; }
         .search-box i { position: absolute; left: 12px; top: 14px; color: var(--text-light); }
         .search-box .form-control { padding-left: 38px; margin-bottom: 0; }
-        .qr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .qr-item { text-align: center; border: 1px dashed var(--border); padding: 10px; border-radius: 8px; }
-        @media print { body * { visibility: hidden; } #qrResult, #qrResult * { visibility: visible; } #qrResult { position: absolute; left: 0; top: 0; width: 100%; } .qr-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } .btn-action, .btn-camera, .bottom-nav { display: none !important; } }
     </style>
 </head>
 <body>
@@ -88,7 +88,6 @@
     
     <div class="container">
         
-        <!-- แท็บยืนยันตัวตน (ใช้ชื่อล้วน) -->
         <div id="tab-auth" class="tab-content active">
             <div class="card" id="loginCard">
                 <div class="card-title"><i class="fa-solid fa-right-to-bracket"></i> เข้าสู่ระบบสารบรรณ</div>
@@ -98,7 +97,6 @@
                 <div class="auth-switch" onclick="toggleAuthForm()"><i class="fa-solid fa-user-plus"></i> ลงทะเบียนครั้งแรก (รอยืนยันสิทธิ์)</div>
             </div>
 
-            <!-- ฟอร์มลงทะเบียน -->
             <div class="card" id="registerCard" style="display: none;">
                 <div class="card-title" style="color:#166534;"><i class="fa-solid fa-user-shield"></i> ลงทะเบียนผู้ปฏิบัติงาน</div>
                 <input type="text" id="regName" class="form-control" placeholder="ยศชื่อ (พิมพ์ติดกัน ไม่ต้องใส่นามสกุล)">
@@ -117,7 +115,6 @@
             </div>
         </div>
 
-        <!-- แดชบอร์ด -->
         <div id="tab-search" class="tab-content">
             <div class="search-box"><i class="fa-solid fa-search"></i><input type="text" id="searchInput" class="form-control" placeholder="ค้นหาเลขแฟ้ม หรือเรื่อง..." onkeyup="debounceSearch()"></div>
             <div id="miniDashboard">
@@ -132,7 +129,6 @@
             <div id="searchResults" style="margin-top: 10px;"></div>
         </div>
 
-        <!-- ผูกเรื่อง (ธุรการ, Admin) -->
         <div id="tab-assign" class="tab-content">
             <div class="card">
                 <div class="card-title" style="color: var(--purple);"><i class="fa-solid fa-folder-plus"></i> ผูกเรื่องเข้าแฟ้ม</div>
@@ -148,7 +144,6 @@
             </div>
         </div>
 
-        <!-- อัปเดตแฟ้ม (หน้าห้อง, ธุรการ, เจ้าของเรื่อง, Admin) -->
         <div id="tab-scan" class="tab-content">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-bolt"></i> อัปเดตสถานะแฟ้ม / เคลียร์แฟ้ม</div>
@@ -171,7 +166,6 @@
 
         <div id="tab-analytics" class="tab-content"><div class="card"><div class="card-title"><i class="fa-solid fa-chart-line"></i> แดชบอร์ดสถิติการเดินแฟ้ม</div><div id="analyticsContent"></div></div></div>
 
-        <!-- Profile & Admin Console -->
         <div id="tab-profile" class="tab-content">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-user-gear"></i> ข้อมูลบัญชีผู้เข้าใช้งาน</div>
@@ -201,7 +195,6 @@
         </div>
     </div>
 
-    <!-- เมนูด้านล่าง -->
     <div class="bottom-nav" id="mainNav">
         <div class="nav-item active" onclick="switchTab('tab-search', this)"><i class="fa-solid fa-chart-pie"></i><span>แดชบอร์ด</span></div>
         <div class="nav-item" onclick="switchTab('tab-assign', this)"><i class="fa-solid fa-folder-plus"></i><span>ผูกเรื่อง</span></div>
@@ -214,8 +207,8 @@
     <div class="modal-content" id="historyModal"><div class="modal-close" onclick="closeHistory()"><i class="fa-solid fa-xmark"></i></div><div style="font-size:15px; font-weight:700; color:var(--navy); margin-bottom:15px;" id="historyTitle">ประวัติแฟ้ม</div><div id="historyTimeline"></div></div>
 
     <script>
-        // 🔴 นำ URL ของ API ที่ Deploy แบบ "ทุกคน (Anyone)" มาวางตรงนี้
-        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2FkTlnjr8yiSdMm6kkR8I9mBwEcq9FvRjOTLuLQci/exec";
+        // 🔴 นำ URL ของ API ของผู้กองมาวางตรงนี้ครับ 
+        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2fkTlnjr8yiSdMm6kkR8I9mBwECq9FvRjOTLuLQci/exec";
 
         function getToken() { return localStorage.getItem("bpp_token") || sessionStorage.getItem("bpp_token"); }
         function escapeHtml(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
@@ -240,11 +233,16 @@
             } else { document.getElementById("mainNav").style.display = "none"; }
         };
 
+        // 🔴 พระเอกของเรา: ฟังก์ชันนี้จะแนบ Content-Type ให้ทะลุกำแพง CORS แน่นอนครับ!
         async function fetchSafePOST(payload) {
             try {
-                const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
+                const response = await fetch(API_URL, { 
+                    method: "POST", 
+                    headers: { "Content-Type": "text/plain;charset=utf-8" }, // 🟢 ตรงนี้คือจุดที่แก้บั๊กเชื่อมต่อไม่ได้ครับ
+                    body: JSON.stringify(payload) 
+                });
                 return await response.json();
-            } catch (err) { throw new Error("การเชื่อมต่อเซิร์ฟเวอร์ขัดข้อง"); }
+            } catch (err) { throw new Error("การเชื่อมต่อเซิร์ฟเวอร์ขัดข้อง: โปรดตรวจสอบลิงก์ API_URL"); }
         }
 
         function toggleAuthForm() {
@@ -253,7 +251,6 @@
             else { log.style.display = "none"; reg.style.display = "block"; }
         }
 
-        // 🔴 เข้าสู่ระบบโดยใช้แค่ "ชื่อ"
         function verifyUser() {
             const name = document.getElementById("loginName").value.trim(); 
             const remember = document.getElementById("chkRemember").checked;
@@ -278,7 +275,7 @@
                 }); 
         }
 
-        // 🔴 ลงทะเบียนรอกการอนุมัติ
+        // 🔴 ระบบลงทะเบียนรออนุมัติ ใช้ fetchSafePOST ตัวใหม่
         function submitRegistration() {
             const name = document.getElementById("regName").value.trim();
             const dept = document.getElementById("regDept").value;
@@ -384,7 +381,6 @@
 
         let sTimeout; function debounceSearch() { let token = getToken(); if(!token) return; clearTimeout(sTimeout); const k = document.getElementById("searchInput").value.trim(); if(!k) { document.getElementById("miniDashboard").style.display="block"; document.getElementById("searchResults").innerHTML=""; return; } document.getElementById("miniDashboard").style.display="none"; sTimeout = setTimeout(() => { fetch(`${API_URL}?action=search&keyword=${encodeURIComponent(k)}&token=${token}`).then(r => r.json()).then(res => { let html = ""; if(!res || res.length===0) html = '<div style="text-align:center; color:#ef4444; padding:20px; font-weight:bold;">❌ ไม่พบข้อมูลแฟ้ม</div>'; else res.forEach(f => { html += `<div class="accordion-item" style="padding:12px;">${buildFileHTML(f)}</div>`; }); document.getElementById("searchResults").innerHTML = html; }); }, 400); }
 
-        // 🔴 Admin: ระบบนำเข้าและจัดการสิทธิ์ด้วย Dropdown
         function importCSV() {
             const file = document.getElementById('csvFileInput').files[0];
             if(!file) return alert("กรุณาเลือกไฟล์ CSV");
