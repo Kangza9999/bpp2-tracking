@@ -395,17 +395,45 @@
         return false;
     }
     async function fetchSafePOST(payload){
-        try{
-            const r=await fetch(API_URL,{redirect:"follow",method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
-            if(!r.ok&&r.status!==0) throw new Error("HTTP "+r.status);
-            const txt=await r.text();
+        // ✅ FIX CORS: Apps Script ต้องการ Content-Type: text/plain เพื่อหลีกเลี่ยง CORS preflight
+        // บน mobile browser บางรุ่น redirect:"follow" ทำให้ preflight fail → ใช้ no-cors แล้ว retry
+        const bodyStr = JSON.stringify(payload);
+        
+        // วิธีที่ 1: standard POST (ใช้ได้บน desktop + mobile ส่วนใหญ่)
+        async function tryFetch(){
+            const r = await fetch(API_URL, {
+                method: "POST",
+                redirect: "follow",
+                body: bodyStr
+                // ✅ ไม่ใส่ Content-Type header → browser จะส่ง text/plain อัตโนมัติ
+                // ซึ่ง Apps Script รองรับ และไม่ trigger CORS preflight
+            });
+            if(!r.ok && r.status !== 0) throw new Error("HTTP "+r.status);
+            const txt = await r.text();
             if(!txt) throw new Error("ไม่มีข้อมูลตอบกลับ");
-            const data=JSON.parse(txt);
+            return JSON.parse(txt);
+        }
+
+        try{
+            const data = await tryFetch();
             if(checkTokenError(data)) throw new Error("Session Expired");
             return data;
         }catch(err){
-            if(err.message==="Session Expired") throw err;
-            throw new Error("เชื่อมต่อไม่ได้: "+err.message);
+            if(err.message === "Session Expired") throw err;
+            // วิธีที่ 2: retry ด้วย FormData (fallback สำหรับ mobile ที่มีปัญหา CORS)
+            try{
+                const fd = new FormData();
+                fd.append("data", bodyStr);
+                const r2 = await fetch(API_URL, { method: "POST", redirect: "follow", body: fd });
+                const txt2 = await r2.text();
+                if(!txt2) throw new Error("no response");
+                const data2 = JSON.parse(txt2);
+                if(checkTokenError(data2)) throw new Error("Session Expired");
+                return data2;
+            }catch(err2){
+                if(err2.message === "Session Expired") throw err2;
+                throw new Error("เชื่อมต่อไม่ได้: "+err.message);
+            }
         }
     }
 
