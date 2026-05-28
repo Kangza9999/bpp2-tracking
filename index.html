@@ -230,7 +230,7 @@
     <script>
         // =========================================================
         // 🔴 นำ URL ของ API ที่ Deploy แบบ "ทุกคน (Anyone)" มาวางตรงนี้ 🔴
-        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2fkTlnjr8yiSdMm6kkR8I9mBwECq9FvRjOTLuLQci/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2FkTlnjr8yiSdMm6kkR8I9mBwEcq9FvRjOTLuLQci/exec"; 
         // =========================================================
 
         let inactivityTime = function () {
@@ -241,26 +241,13 @@
 
         function logoutManual() { if(confirm("ออกจากระบบ?")) { localStorage.clear(); location.reload(); } }
 
-        // เพิ่มการดักจับ Error (Catch) ป้องกันหน้าจอหมุนค้าง
         window.onload = function() {
-            if(API_URL.includes("xxxxxxxxxxxx")) {
-                alert("❌ ระบบขัดข้อง: คุณยังไม่ได้ใส่ API_URL ที่ถูกต้องในโค้ด Index.html ครับ");
-                document.getElementById("marqueeText").innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ระบบขัดข้อง: ยังไม่ได้เชื่อมต่อ API`;
-                return;
-            }
-
-            fetch(`${API_URL}?action=getConfig`)
-                .then(r => { if(!r.ok) throw new Error("Network"); return r.json(); })
-                .then(d => document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${d.text||"ระบบพร้อมใช้งาน"}`)
-                .catch(e => document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-triangle-exclamation"></i> การเชื่อมต่อหลังบ้านขัดข้อง`);
-            
-            fetch(`${API_URL}?action=getUserList`)
-                .then(r => r.json())
-                .then(data => {
-                    let uList = document.getElementById("userList"), fList = document.getElementById("fileIdList");
-                    data.names.forEach(n => uList.appendChild(new Option(n)));
-                    data.ids.forEach(i => fList.appendChild(new Option(i)));
-                }).catch(e => console.log("โหลดรายชื่อไม่ได้"));
+            fetch(`${API_URL}?action=getConfig`).then(r=>r.json()).then(d=> document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${d.text||"ระบบพร้อมใช้งาน"}`);
+            fetch(`${API_URL}?action=getUserList`).then(r=>r.json()).then(data => {
+                let uList = document.getElementById("userList"), fList = document.getElementById("fileIdList");
+                data.names.forEach(n => uList.appendChild(new Option(n)));
+                data.ids.forEach(i => fList.appendChild(new Option(i)));
+            });
 
             if(localStorage.getItem("bpp_user")) {
                 document.getElementById("userName").value = localStorage.getItem("bpp_user");
@@ -275,11 +262,9 @@
 
         function liveSync() {
             let u = localStorage.getItem("bpp_user") || "";
-            fetch(`${API_URL}?action=ping&user=${encodeURIComponent(u)}`)
-                .then(r=>r.json())
-                .then(res => { document.getElementById("liveUserBar").innerHTML = `<i class="fa-solid fa-users"></i> ผู้ใช้งานระบบขณะนี้: ${res.count} คน (${res.text})`; })
-                .catch(e => console.log("Live Sync หลุด"));
-            
+            fetch(`${API_URL}?action=ping&user=${encodeURIComponent(u)}`).then(r=>r.json()).then(res => {
+                document.getElementById("liveUserBar").innerHTML = `<i class="fa-solid fa-users"></i> ผู้ใช้งานระบบขณะนี้: ${res.count} คน (${res.text})`;
+            });
             if(document.getElementById("tab-search").classList.contains("active")) loadDash();
             if(document.getElementById("tab-analytics").classList.contains("active")) loadAnalytics();
         }
@@ -292,7 +277,7 @@
         function sendPostRequest(payload, successMsgId) {
             const btn = document.getElementById(successMsgId); btn.style.display="block"; btn.style.background="#fef9c3"; btn.style.color="#854d0e"; btn.innerHTML="กำลังซิงค์คลาวด์...";
             fetch(API_URL, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload) })
-            .then(r => r.json()).then(d=>{
+            .then(r=>r.json()).then(d=>{
                 if(d.status==="success") {
                     btn.style.background="#dcfce7"; btn.style.color="#166534"; btn.innerHTML=`<i class="fa-solid fa-check"></i> ${d.message}`;
                     setTimeout(()=>btn.style.display="none", 3000);
@@ -303,28 +288,19 @@
             }).catch(()=> { btn.style.background="#fee2e2"; btn.style.color="#991b1b"; btn.innerHTML=`การเชื่อมต่อล้มเหลว`; });
         }
 
-        // เพิ่มการดักจับ Error กรณีลิงก์ผิดหรือไม่ได้เปิดสิทธิ์ Anyone
         function verifyUser() {
             const n = document.getElementById("userName").value.trim(), p = document.getElementById("userPassword").value.trim(); 
             if(n.length<3 || p.length===0) return alert("กรอกชื่อ/รหัสให้ครบ");
             document.getElementById("btnVerify").innerHTML = "กำลังตรวจสอบ...";
-            
-            fetch(`${API_URL}?action=verify&name=${encodeURIComponent(n)}&pass=${encodeURIComponent(p)}`)
-            .then(r => {
-                if(!r.ok) throw new Error("CORS or Server Error");
-                return r.json();
-            })
-            .then(res=>{
+            fetch(`${API_URL}?action=verify&name=${encodeURIComponent(n)}&pass=${encodeURIComponent(p)}`).then(r=>r.json()).then(res=>{
                 if(res.auth) { localStorage.setItem("bpp_user",n); localStorage.setItem("bpp_pass",p); localStorage.setItem("bpp_dept",res.dept); localStorage.setItem("bpp_role",res.role); location.reload(); } 
                 else { localStorage.clear(); alert("ชื่อหรือรหัสไม่ถูกต้อง"); document.getElementById("btnVerify").innerHTML = "เข้าสู่ระบบ"; }
-            })
-            .catch(err => {
-                alert("❌ ล้มเหลว: ไม่สามารถเชื่อมต่อฐานข้อมูลได้\nโปรดตรวจสอบ 1. API_URL ถูกต้องหรือไม่ 2. สิทธิ์ Deploy เป็น 'Anyone' หรือยัง");
-                document.getElementById("btnVerify").innerHTML = "ลองใหม่อีกครั้ง";
             }); 
         }
 
-        function registerNew() { sendPostRequest({ action:"register", adminName:localStorage.getItem("bpp_user"), adminPass:localStorage.getItem("bpp_pass"), newName:document.getElementById("addName").value.trim(), newDept:document.getElementById("addDept").value, newRole:document.getElementById("addRole").value, newPassword:document.getElementById("addPassword").value.trim() }, "authStatus"); }
+        function registerNew() {
+            sendPostRequest({ action:"register", adminName:localStorage.getItem("bpp_user"), adminPass:localStorage.getItem("bpp_pass"), newName:document.getElementById("addName").value.trim(), newDept:document.getElementById("addDept").value, newRole:document.getElementById("addRole").value, newPassword:document.getElementById("addPassword").value.trim() }, "authStatus");
+        }
         function updateAnnouncement() { sendPostRequest({ action:"announce", adminName:localStorage.getItem("bpp_user"), adminPass:localStorage.getItem("bpp_pass"), text:document.getElementById("announcementInput").value.trim() }, "authStatus"); }
 
         let scannerObj = null;
@@ -336,7 +312,7 @@
             const role = localStorage.getItem("bpp_role");
             if((id==='tab-scan'||id==='tab-assign') && !role) { alert("กรุณาล็อกอินก่อนครับ"); switchTab('tab-profile', document.querySelectorAll('.nav-item')[4]); return; }
             if(id==='tab-assign' && role==='หน้าห้อง') return alert("เมนูผูกเรื่องสำหรับธุรการ");
-            if(id==='tab-scan' && role==='ธุรการ') return alert("เมนูอัปเดตสำหรับหน้าห้อง (หรือเจ้าของงานเพื่อรับแฟ้มคืน)");
+            if(id==='tab-scan' && role==='ธุรการ') return alert("เมนูอัปเดตสำหรับหน้าห้อง (หรือเจ้าของงานเพื่อรับแฟ้มคืน)"); 
 
             document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
             document.getElementById(id).classList.add('active'); el.classList.add('active'); stopScanner();
@@ -356,17 +332,20 @@
 
         function loadDash() {
             fetch(`${API_URL}?action=getDash`).then(r=>r.json()).then(data=>{
-                if(data.error) { document.getElementById('dash-accordion').innerHTML = `<div style="text-align:center; padding:15px; color:#dc2626;">Error: ติดปัญหาดึงข้อมูล</div>`; return; }
-                document.getElementById('dash-total').innerText=data.total; document.getElementById('dash-in').innerText=data.in; document.getElementById('dash-out').innerText=data.out;
+                if(data.error) return; 
+                
+                // 🔴 จุดที่แก้บั๊กคือตรงนี้ครับ ลบการเรียกใช้ dash-out ออกไปแล้ว
+                document.getElementById('dash-total').innerText=data.total; 
+                document.getElementById('dash-in').innerText=data.in;
                 
                 let topHtml = "";
-                if(data.urgent && data.urgent.length > 0) {
+                if(data.urgent.length > 0) {
                     let uH = ""; data.urgent.forEach(f => uH += buildFileHTML(f));
                     topHtml += `<div class="accordion-item"><button class="accordion-btn" style="background:#fef2f2; color:#dc2626;" onclick="toggleAcc(this)"><div>🔥 แฟ้มด่วนที่สุด <span class="badge" style="background:#dc2626;">${data.urgent.length}</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${uH}</div></div>`;
                 }
-                if(data.approved && data.approved.length > 0) {
+                if(data.approved.length > 0) {
                     let aH = ""; data.approved.forEach(f => aH += buildFileHTML(f));
-                    topHtml += `<div class="accordion-item"><button class="accordion-btn" style="background:#f0fdf4; color:#166534;" onclick="toggleAcc(this)"><div>✅ แฟ้มอนุมัติแล้ว <span class="badge" style="background:#166534;">${data.approved.length}</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${aH}</div></div>`;
+                    topHtml += `<div class="accordion-item"><button class="accordion-btn" style="background:#f0fdf4; color:#166534;" onclick="toggleAcc(this)"><div>✅ แฟ้มอนุมัติแล้ว (รอรับคืน) <span class="badge" style="background:#166534;">${data.approved.length}</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${aH}</div></div>`;
                 }
                 document.getElementById('dash-top-accordion').innerHTML = topHtml;
 
@@ -376,9 +355,7 @@
                     html += `<div class="accordion-item"><button class="accordion-btn" onclick="toggleAcc(this)"><div>${d.name} <span class="badge">${d.count} แฟ้ม</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${fH}</div></div>`;
                 });
                 document.getElementById('dash-accordion').innerHTML = html || "<div style='text-align:center; padding:15px; color:#94a3b8;'>ไม่มีประวัติแฟ้มค้าง</div>";
-            }).catch(e => {
-                document.getElementById('dash-accordion').innerHTML = `<div style="text-align:center; padding:15px; color:#dc2626;">การเชื่อมต่อดึงข้อมูลขัดข้อง (กรุณาเช็ค API_URL)</div>`;
-            });
+            }).catch(e => console.log("หน้าจอแสดงผลขัดข้อง"));
         }
 
         function loadAnalytics() {
@@ -399,22 +376,28 @@
             const c = checkU(); if(!c) return; 
             const scanStatus = document.querySelector('input[name="scanStatus"]:checked').value;
             let payload = { action: "scan", fileId: text, dept: c.d, scanStatus: scanStatus, loc: document.getElementById("locScan").value, user: c.u };
+            
             const imgInput = document.getElementById("correctionImage");
             if(scanStatus === "ส่งกลับแก้ไข" && imgInput.files.length > 0) {
-                const reader = new FileReader(); document.getElementById("scanAlert").style.display="block"; document.getElementById("scanAlert").innerHTML="กำลังอัปโหลดรูปภาพ...";
-                reader.onload = function(e) { payload.imageBase64 = e.target.result; payload.imageMime = imgInput.files[0].type; sendPostRequest(payload, "scanAlert"); };
+                const reader = new FileReader();
+                document.getElementById("scanAlert").style.display="block"; document.getElementById("scanAlert").innerHTML="กำลังอัปโหลดรูปภาพ...";
+                reader.onload = function(e) {
+                    payload.imageBase64 = e.target.result;
+                    payload.imageMime = imgInput.files[0].type;
+                    sendPostRequest(payload, "scanAlert");
+                };
                 reader.readAsDataURL(imgInput.files[0]);
-            } else { sendPostRequest(payload, "scanAlert"); }
+            } else {
+                sendPostRequest(payload, "scanAlert"); 
+            }
         }
         
         function runAssign(text) { const c = checkU(); if(!c) return; const t = document.getElementById("newDocTitle").value.trim(); if(!t) return alert("กรอกชื่อเรื่องก่อน"); sendPostRequest({ action:"assign", fileId:text, title:t, urgency:document.getElementById("urgencyAssign").value, dept:c.d, loc:document.getElementById("locAssign").value, user:c.u }, "assignStatus"); }
         function manualScan() { const v = document.getElementById("manualIdScan").value.trim().toUpperCase(); if(v) runScan(v); }
         function manualAssign() { const v = document.getElementById("manualIdAssign").value.trim().toUpperCase(); if(v) runAssign(v); }
+        
         function generateQR() { const text = document.getElementById("qrGenInput").value.trim().toUpperCase(); if(!text) return; document.getElementById("qrImage").src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(text)}&margin=10`; document.getElementById("qrTextDisplay").innerText = text; document.getElementById("qrResult").style.display = "block"; }
         
-        document.getElementById('qr-scan').addEventListener('change', e => { if(e.target.files[0]) { new Html5Qrcode("reader-scan").scanFile(e.target.files[0], true).then(runScan); e.target.value=''; }});
-        document.getElementById('qr-assign').addEventListener('change', e => { if(e.target.files[0]) { new Html5Qrcode("reader-assign").scanFile(e.target.files[0], true).then(runAssign); e.target.value=''; }});
-
         let sTimeout; function debounceSearch() { clearTimeout(sTimeout); const k = document.getElementById("searchInput").value.trim(); if(!k) { document.getElementById("miniDashboard").style.display="block"; document.getElementById("searchResults").innerHTML=""; return; } document.getElementById("miniDashboard").style.display="none"; sTimeout = setTimeout(() => { fetch(`${API_URL}?action=search&keyword=${encodeURIComponent(k)}`).then(r => r.json()).then(res => { let html = ""; if(!res || res.length===0) html = '<div style="text-align:center; color:#ef4444; padding:20px;">❌ ไม่พบข้อมูล</div>'; else res.forEach(f => { html += `<div class="accordion-item" style="padding:12px;">${buildFileHTML(f)}</div>`; }); document.getElementById("searchResults").innerHTML = html; }); }, 400); }
-    </script></body>
+    </script>
 </html>
