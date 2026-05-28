@@ -96,7 +96,8 @@
 
     <datalist id="userList"></datalist>
 
-    <div class="marquee-container"><div class="marquee-text" id="marqueeText"><i class="fa-solid fa-satellite-dish"></i> กำลังเชื่อมต่อข้อมูล...</div></div>
+    <!-- 🔴 แก้ข้อความตั้งต้นตอนยังไม่เข้าระบบเป็นอันนี้ครับ -->
+    <div class="marquee-container"><div class="marquee-text" id="marqueeText"><i class="fa-solid fa-lock"></i> กรุณาเข้าสู่ระบบเพื่อปฏิบัติงาน</div></div>
     
     <div class="header">
         <h1><i class="fa-solid fa-shield-halved" style="color: var(--gold);"></i> บก.ตชด.ภาค 2</h1>
@@ -228,7 +229,6 @@
         </div>
     </div>
 
-    <!-- เมนูด้านล่าง -->
     <div class="bottom-nav" id="mainNav">
         <div class="nav-item active" onclick="switchTab('tab-search', this)"><i class="fa-solid fa-chart-pie"></i><span>แดชบอร์ด</span></div>
         <div class="nav-item" onclick="switchTab('tab-assign', this)"><i class="fa-solid fa-folder-plus"></i><span>ผูกเรื่อง</span></div>
@@ -243,33 +243,35 @@
     <div id="dummy-reader" style="display:none;"></div>
 
     <script>
-        // 🔴🔴🔴 นำ URL ของ API ที่เกิดจากปุ่ม "การทำให้ใช้งานได้รายการใหม่" มาวางตรงนี้ครับ 🔴🔴🔴
+        // 🔴 นำ URL ของ API ที่ Deploy ล่าสุดมาวางตรงนี้ 
         const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2FkTlnjr8yiSdMm6kkR8I9mBwEcq9FvRjOTLuLQci/exec";
 
         function getToken() { return localStorage.getItem("bpp_token") || sessionStorage.getItem("bpp_token"); }
         function escapeHtml(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
-        // 🔴 ฟังก์ชันเชื่อมต่อเซิร์ฟเวอร์แบบ POST ที่เสถียรที่สุด 
+        function checkTokenError(data) {
+            if (data && data.error && (data.error.includes("เซสชัน") || data.error.includes("Token"))) {
+                localStorage.removeItem("bpp_token"); sessionStorage.removeItem("bpp_token");
+                alert("⚠️ เซสชันการเชื่อมต่อหมดอายุ กรุณาลงชื่อเข้าใช้งานใหม่อีกครั้ง");
+                location.reload(); return true;
+            }
+            return false;
+        }
+
         async function fetchSafePOST(payload) {
             try {
                 const response = await fetch(API_URL, { 
-                    redirect: "follow", // บังคับให้เบราว์เซอร์ตามลิงก์ Redirect ของ Google เสมอ
+                    redirect: "follow", 
                     method: "POST", 
                     headers: { "Content-Type": "text/plain;charset=utf-8" }, 
                     body: JSON.stringify(payload) 
                 });
                 const data = await response.json();
-                if(data && data.error && (data.error.includes("เซสชัน") || data.error.includes("Token"))) {
-                    localStorage.removeItem("bpp_token"); sessionStorage.removeItem("bpp_token");
-                    alert("⚠️ เซสชันหมดอายุ กรุณาลงชื่อเข้าใช้งานใหม่อีกครั้ง");
-                    location.reload();
-                    throw new Error("Session Expired");
-                }
+                if(checkTokenError(data)) throw new Error("Session Expired");
                 return data;
             } catch (err) { 
                 if(err.message === "Session Expired") throw err;
-                console.error("Fetch Error Detail:", err);
-                throw new Error("ล้มเหลว: ไม่สามารถเชื่อมต่อฐานข้อมูลได้ โปรดเช็คว่าได้กด 'การทำให้ใช้งานได้รายการใหม่' หรือยัง"); 
+                throw new Error("การเชื่อมต่อขัดข้อง โปรดตรวจสอบลิงก์ API_URL หรือเครือข่ายอินเทอร์เน็ต"); 
             }
         }
 
@@ -305,6 +307,8 @@
             } else { 
                 document.getElementById("mainNav").style.display = "none"; 
                 document.getElementById("liveUserBar").style.display = "none";
+                // 🔴 ให้ข้อความนิ่งๆ สำหรับตอนยังไม่ล็อกอิน
+                document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-lock"></i> กรุณาเข้าสู่ระบบเพื่อปฏิบัติงาน`;
             }
         };
 
@@ -327,7 +331,7 @@
                         storage.setItem("bpp_token", res.token); storage.setItem("bpp_user", res.user); storage.setItem("bpp_role", res.role); storage.setItem("bpp_dept", res.dept);
                         location.reload(); 
                     } else { alert(res.message); document.getElementById("btnVerify").innerHTML = "ลงชื่อเข้าปฏิบัติงาน"; }
-                }).catch(err => { alert(err.message); document.getElementById("btnVerify").innerHTML = "ลงชื่อเข้าปฏิบัติงาน"; }); 
+                }).catch(err => { alert(err.message); document.getElementById("btnVerify").innerHTML = "ลองอีกครั้ง"; }); 
         }
 
         function submitRegistration() {
@@ -418,7 +422,7 @@
             document.getElementById("historyTitle").innerText = `ประวัติ: [${id}] ${title}`; document.getElementById("historyTimeline").innerHTML = `<div style="text-align:center; padding:20px;">กำลังโหลด...</div>`;
             fetchSafePOST({action:"getHistory", fileId:id, token:token}).then(data => {
                 let html = "";
-                data.forEach(h => { let imgLink = h.imgUrl ? `<br><a href="${h.imgUrl}" target="_blank" style="font-size:11px; color:#2563eb;"><i class="fa-solid fa-image"></i> เปิดดูภาพแนบ</a>` : ""; html += `<div class="timeline-item"><div class="timeline-time">${escapeHtml(h.time)} • ${escapeHtml(h.loc)}</div><div class="timeline-status">${escapeHtml(h.status)}</div><div class="timeline-user"><i class="fa-solid fa-user-check"></i> ${escapeHtml(h.user)}</div>${imgLink}</div>`; });
+                data.forEach(h => { let imgLink = h.imgUrl ? `<br><a href="${h.imgUrl}" target="_blank" style="font-size:11px; color:#2563eb;"><i class="fa-solid fa-image"></i> เปิดดูภาพ</a>` : ""; html += `<div class="timeline-item"><div class="timeline-time">${escapeHtml(h.time)} • ${escapeHtml(h.loc)}</div><div class="timeline-status">${escapeHtml(h.status)}</div><div class="timeline-user"><i class="fa-solid fa-user-check"></i> ${escapeHtml(h.user)}</div>${imgLink}</div>`; });
                 document.getElementById("historyTimeline").innerHTML = html || "<div style='text-align:center;'>ยังไม่มีประวัติ</div>";
             }).catch(e=>{ document.getElementById("historyTimeline").innerHTML = "<div style='color:red; text-align:center;'>ดึงข้อมูลล้มเหลว</div>"; });
         }
