@@ -11,7 +11,6 @@
         :root { --navy: #002D62; --gold: #FFD700; --bg: #f4f7fb; --card: #ffffff; --text: #1e293b; --text-light: #64748b; --border: #e2e8f0; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Sarabun', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
-        
         .marquee-container { background: linear-gradient(270deg, #dc2626, #2563eb, #16a34a, #d97706, #9333ea, #be123c); background-size: 1200% 1200%; animation: gradientShift 30s ease infinite; color: white; padding: 10px 0; font-size: 14px; font-weight: 700; overflow: hidden; white-space: nowrap; position: relative; z-index: 101; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 2px solid rgba(255,255,255,0.2); }
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); letter-spacing: 0.5px; }
@@ -20,7 +19,6 @@
         .header { background: var(--navy); color: white; padding: 15px; text-align: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .header h1 { font-size: 18px; font-weight: 700; margin: 0; }
         .header-dev { font-size: 9px; color: #94a3b8; margin-top: 6px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; }
-        
         .live-bar { background: #e2e8f0; color: var(--navy); font-size: 11px; text-align: center; padding: 6px; font-weight: 700; border-bottom: 1px solid #cbd5e1; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.02); }
         
         .container { padding: 12px; max-width: 500px; margin: 0 auto; }
@@ -93,7 +91,6 @@
 </head>
 <body>
 
-    <!-- 🔴 Datalist สำหรับดึงรายชื่อคนในระบบมาทำ Dropdown อัตโนมัติ (เพิ่มใหม่) -->
     <datalist id="userList"></datalist>
 
     <div class="marquee-container"><div class="marquee-text" id="marqueeText"><i class="fa-solid fa-satellite-dish"></i> กำลังเชื่อมต่อข้อมูล...</div></div>
@@ -109,7 +106,6 @@
 
     <div class="container">
         
-        <!-- แท็บยืนยันตัวตน -->
         <div id="tab-auth" class="tab-content active">
             <div class="card" id="loginCard">
                 <div class="card-title"><i class="fa-solid fa-right-to-bracket"></i> เข้าสู่ระบบสารบรรณ</div>
@@ -137,7 +133,6 @@
             </div>
         </div>
 
-        <!-- แดชบอร์ด -->
         <div id="tab-search" class="tab-content">
             <div class="search-box"><i class="fa-solid fa-search"></i><input type="text" id="searchInput" class="form-control" placeholder="ค้นหาเลขแฟ้ม, ชื่อเรื่อง หรือชื่อเจ้าของเรื่อง..." onkeyup="debounceSearch()"></div>
             <div id="miniDashboard">
@@ -152,15 +147,12 @@
             <div id="searchResults" style="margin-top: 10px;"></div>
         </div>
 
-        <!-- 🔴 ผูกเรื่อง (เพิ่มช่องใส่ชื่อเจ้าของเรื่อง) -->
         <div id="tab-assign" class="tab-content">
             <div class="card">
                 <div class="card-title" style="color: var(--purple);"><i class="fa-solid fa-folder-plus"></i> ผูกเรื่องเข้าแฟ้ม</div>
                 <input type="text" id="newDocTitle" class="form-control" placeholder="พิมพ์ชื่อเรื่องที่เสนอ...">
-                
                 <div style="font-size:12px; font-weight:600; margin-bottom:5px;">เจ้าของเรื่อง (ผู้รับผิดชอบ):</div>
                 <input type="text" id="ownerAssign" class="form-control" placeholder="พิมพ์หรือเลือกชื่อเจ้าของเรื่อง..." list="userList">
-
                 <div style="display: flex; gap:10px;">
                     <div style="flex:1;"><div style="font-size:12px; font-weight:600; margin-bottom:5px;">ความเร่งด่วน:</div><select id="urgencyAssign" class="form-control"><option value="ปกติ">🟢 ปกติ</option><option value="ด่วน">🟡 ด่วน</option><option value="ด่วนมาก">🟠 ด่วนมาก</option><option value="ด่วนที่สุด">🔴 ด่วนที่สุด</option></select></div>
                     <div style="flex:1;"><div style="font-size:12px; font-weight:600; margin-bottom:5px;">พิกัด:</div><select id="locAssign" class="form-control"><option value="โต๊ะธุรการ">📍 โต๊ะธุรการ</option><option value="หน้าห้อง ผกก.">📍 หน้าห้อง ผกก.</option><option value="หน้าห้อง ผบก.">📍 หน้าห้อง ผบก.</option></select></div>
@@ -175,7 +167,6 @@
             </div>
         </div>
 
-        <!-- อัปเดตแฟ้ม -->
         <div id="tab-scan" class="tab-content">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-bolt"></i> อัปเดตสถานะแฟ้ม / เคลียร์แฟ้ม</div>
@@ -198,7 +189,6 @@
 
         <div id="tab-analytics" class="tab-content"><div class="card"><div class="card-title"><i class="fa-solid fa-chart-line"></i> แดชบอร์ดสถิติการเดินแฟ้ม</div><div id="analyticsContent"></div></div></div>
 
-        <!-- Profile & Admin Console -->
         <div id="tab-profile" class="tab-content">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-user-gear"></i> ข้อมูลบัญชีผู้เข้าใช้งาน</div>
@@ -230,7 +220,6 @@
         </div>
     </div>
 
-    <!-- เมนูด้านล่าง -->
     <div class="bottom-nav" id="mainNav">
         <div class="nav-item active" onclick="switchTab('tab-search', this)"><i class="fa-solid fa-chart-pie"></i><span>แดชบอร์ด</span></div>
         <div class="nav-item" onclick="switchTab('tab-assign', this)"><i class="fa-solid fa-folder-plus"></i><span>ผูกเรื่อง</span></div>
@@ -245,21 +234,35 @@
     <div id="dummy-reader" style="display:none;"></div>
 
     <script>
-        // 🔴 นำ URL ของ API ที่ Deploy ล่าสุดมาวางตรงนี้ 
+        // 🔴 นำ URL ของ API ที่เพิ่งกด New Version มาวางตรงนี้
         const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2FkTlnjr8yiSdMm6kkR8I9mBwEcq9FvRjOTLuLQci/exec";
 
         function getToken() { return localStorage.getItem("bpp_token") || sessionStorage.getItem("bpp_token"); }
         function escapeHtml(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
-        // ระบบดักจับ Error และกันการโหลดข้อมูลซ้อนกัน
-        let isFetching = false;
-        function checkTokenError(data) {
-            if (data && data.error && (data.error.includes("เซสชัน") || data.error.includes("Token"))) {
-                localStorage.removeItem("bpp_token"); sessionStorage.removeItem("bpp_token");
-                alert("⚠️ เซสชันการเชื่อมต่อหมดอายุ (หรือระบบมีการอัปเดตใหม่) กรุณาลงชื่อเข้าใช้งานใหม่อีกครั้ง");
-                location.reload(); return true;
+        // 🔴 โค้ดพระเอก: ฟังก์ชันรับมือการส่งข้อมูล POST แบบเจาะกำแพง
+        async function fetchSafePOST(payload) {
+            if (!API_URL || API_URL.includes("YOUR_DEPLOYMENT_URL")) {
+                throw new Error("⚠️ ยังไม่ได้ใส่ลิงก์ API_URL ในโค้ดหน้าบ้าน");
             }
-            return false;
+            try {
+                const response = await fetch(API_URL, { 
+                    method: "POST", 
+                    headers: { "Content-Type": "text/plain;charset=utf-8" }, 
+                    body: JSON.stringify(payload) 
+                });
+                const data = await response.json();
+                if(data && data.error && (data.error.includes("เซสชัน") || data.error.includes("Token"))) {
+                    localStorage.removeItem("bpp_token"); sessionStorage.removeItem("bpp_token");
+                    alert("⚠️ เซสชันการเชื่อมต่อหมดอายุ (หรือระบบมีการอัปเดตใหม่) กรุณาลงชื่อเข้าใช้งานใหม่อีกครั้ง");
+                    location.reload();
+                    throw new Error("Session Expired");
+                }
+                return data;
+            } catch (err) { 
+                if(err.message === "Session Expired") throw err;
+                throw new Error(`การเชื่อมต่อเซิร์ฟเวอร์ขัดข้อง \nโปรดตรวจสอบการตั้งค่า Deploy ว่าตั้ง "ผู้มีสิทธิ์เข้าถึง" เป็น "ทุกคน (Anyone)" หรือไม่`); 
+            }
         }
 
         window.onload = function() {
@@ -278,18 +281,18 @@
                     document.getElementById("nav-profile").innerHTML = '<i class="fa-solid fa-crown"></i><span>แอดมิน</span>';
                 }
                 
-                // 🔴 โหลดรายชื่อผู้ใช้งานมาเก็บไว้ใน Datalist ทันทีที่เข้าแอป
-                fetch(`${API_URL}?action=get_user_names&token=${token}`).then(r=>r.json()).then(names=>{
-                    if(!checkTokenError(names) && Array.isArray(names)) {
+                fetchSafePOST({action:"get_user_names", token:token}).then(names=>{
+                    if(Array.isArray(names)) {
                         const dl = document.getElementById("userList"); dl.innerHTML = "";
                         names.forEach(n => dl.appendChild(new Option(n)));
                     }
                 }).catch(e=>{});
 
                 loadDash();
-                fetch(`${API_URL}?action=getConfig&token=${token}`).then(r=>r.json()).then(d=> {
-                    if(!checkTokenError(d)) document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(d.text)||"ระบบพร้อมใช้งาน"}`;
-                });
+                fetchSafePOST({action:"getConfig", token:token}).then(d=> {
+                    if(d.text) document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(d.text)}`;
+                }).catch(e=>{});
+                
                 liveSync(); setInterval(liveSync, 15000); 
             } else { 
                 document.getElementById("mainNav").style.display = "none"; 
@@ -297,36 +300,27 @@
             }
         };
 
-        async function fetchSafePOST(payload) {
-            try {
-                const response = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
-                const data = await response.json();
-                if(checkTokenError(data)) throw new Error("เซสชันหมดอายุ");
-                return data;
-            } catch (err) { throw new Error(err.message === "เซสชันหมดอายุ" ? err.message : "การเชื่อมต่อเซิร์ฟเวอร์ขัดข้อง"); }
-        }
-
         function toggleAuthForm() {
             let log = document.getElementById("loginCard"); let reg = document.getElementById("registerCard");
             if (log.style.display === "none") { log.style.display = "block"; reg.style.display = "none"; } 
             else { log.style.display = "none"; reg.style.display = "block"; }
         }
 
+        // 🔴 อัปเกรดระบบ Login ให้ใช้ POST
         function verifyUser() {
             const name = document.getElementById("loginName").value.trim(); 
             const remember = document.getElementById("chkRemember").checked;
             if(!name) return alert("กรุณาพิมพ์ยศและชื่อของท่าน");
             
             document.getElementById("btnVerify").innerHTML = "กำลังเข้าสู่ระบบ...";
-            fetch(`${API_URL}?action=login&name=${encodeURIComponent(name)}`)
-                .then(r => r.json())
+            fetchSafePOST({ action: "login", name: name })
                 .then(res => {
                     if(res.auth) { 
                         let storage = remember ? localStorage : sessionStorage;
                         storage.setItem("bpp_token", res.token); storage.setItem("bpp_user", res.user); storage.setItem("bpp_role", res.role); storage.setItem("bpp_dept", res.dept);
                         location.reload(); 
                     } else { alert(res.message); document.getElementById("btnVerify").innerHTML = "ลงชื่อเข้าปฏิบัติงาน"; }
-                }).catch(err => { alert("ล้มเหลว: " + err.message); document.getElementById("btnVerify").innerHTML = "ลองอีกครั้ง"; }); 
+                }).catch(err => { alert(err.message); document.getElementById("btnVerify").innerHTML = "ลองอีกครั้ง"; }); 
         }
 
         function submitRegistration() {
@@ -340,7 +334,7 @@
             }).catch(e => { alert(e.message); document.getElementById("btnRegister").innerHTML = "ส่งข้อมูลลงทะเบียน"; });
         }
 
-        function logoutManual() { if(confirm("ต้องการออกจากระบบ?")) { fetch(`${API_URL}?action=logout&token=${getToken()}`); localStorage.clear(); sessionStorage.clear(); location.reload(); } }
+        function logoutManual() { if(confirm("ต้องการออกจากระบบ?")) { fetchSafePOST({action:"logout", token:getToken()}).then(()=>{ localStorage.clear(); sessionStorage.clear(); location.reload(); }); } }
 
         let scannerAssign = null; let scannerScan = null; const html5QrCodeDummy = new Html5Qrcode("dummy-reader"); 
         function stopAllScanners() {
@@ -363,7 +357,6 @@
         function getStatusClass(s) { if(s.includes("อนุมัติ")||s.includes("รับ")) return "status-ok"; if(s.includes("ตีกลับ")||s.includes("แก้ไข")) return "status-err"; return "status-warn"; }
         function toggleAcc(btn) { const c = btn.nextElementSibling, i = btn.querySelector('i'); if(c.classList.contains('expanded')){c.classList.remove('expanded');i.className="fa-solid fa-plus";} else {c.classList.add('expanded');i.className="fa-solid fa-minus";} }
 
-        // 🔴 เพิ่มป้ายชื่อ "เจ้าของเรื่อง" ใน HTML แฟ้ม
         function buildFileHTML(f) { 
             let eId = escapeHtml(f.id), eTitle = escapeHtml(f.title), eAction = escapeHtml(f.action), eLoc = escapeHtml(f.loc), eTime = escapeHtml(f.time);
             let sC = getStatusClass(eAction); let uH = f.urgency!=="ปกติ"?`<span class="tag" style="color:#dc2626;"><i class="fa-solid fa-bolt"></i> ${escapeHtml(f.urgency)}</span>`:`<span class="tag">ปกติ</span>`; 
@@ -373,13 +366,13 @@
             return `<div class="file-item" onclick="openHistory('${eId}', '${eTitle}')"><div class="file-title"><span style="color:var(--navy);">[ ${eId} ]</span> ${eTitle}</div><div class="file-meta"><span class="tag"><i class="fa-solid fa-location-dot"></i> ${eLoc}</span><span class="tag ${sC}"><i class="fa-solid fa-circle-info"></i> ${eAction}</span>${uH}<span class="tag"><i class="fa-regular fa-clock"></i> ${eTime}</span>${ownerTag}${imgBtn}</div></div>`; 
         }
 
+        let isFetching = false;
         function loadDash(isSync = false) {
             let token = getToken(); if(!token || isFetching) return;
             isFetching = true;
             let openIds = Array.from(document.querySelectorAll('.accordion-content.expanded')).map(el => el.previousElementSibling.getAttribute('data-id'));
-            fetch(`${API_URL}?action=getDash&token=${token}`).then(r=>r.json()).then(data=>{
+            fetchSafePOST({action:"getDash", token:token}).then(data=>{
                 isFetching = false;
-                if(checkTokenError(data)) return; 
                 document.getElementById('dash-total').innerText=data.total; document.getElementById('dash-in').innerText=data.in;
                 let topHtml = "";
                 if(data.urgent.length > 0) { let uH = ""; data.urgent.forEach(f => uH += buildFileHTML(f)); topHtml += `<div class="accordion-item"><button class="accordion-btn" data-id="urgent" style="background:#fef2f2; color:#dc2626;" onclick="toggleAcc(this)"><div>🔥 แฟ้มด่วนที่สุด <span class="badge" style="background:#dc2626;">${data.urgent.length}</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${uH}</div></div>`; }
@@ -395,35 +388,32 @@
 
         function liveSync() { 
             let token = getToken(); if(!token) return; 
-            fetch(`${API_URL}?action=ping&token=${token}`).then(r=>r.json()).then(res => {
-                if(checkTokenError(res)) return;
+            fetchSafePOST({action:"ping", token:token}).then(res => {
                 document.getElementById('onlineCount').innerText = res.count || 0;
                 document.getElementById('onlineNames').innerText = res.text ? `( ${escapeHtml(res.text)} )` : "";
-            });
+            }).catch(e=>{});
             if(document.getElementById("tab-search").classList.contains("active")) loadDash(true); 
             if(document.getElementById("tab-analytics").classList.contains("active")) loadAnalytics(); 
         }
 
         function loadAnalytics() {
             let token = getToken(); if(!token) return;
-            fetch(`${API_URL}?action=getAnalytics&token=${token}`).then(r=>r.json()).then(data=>{
-                if(checkTokenError(data)) return;
+            fetchSafePOST({action:"getAnalytics", token:token}).then(data=>{
                 let html = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:10px;"><tr style="background:#f1f5f9; color:var(--navy);"><th style="padding:8px; text-align:left;">แผนก</th><th style="padding:8px; text-align:center;">รวม</th><th style="padding:8px; text-align:center;">เสร็จ</th><th style="padding:8px; text-align:center;">ค้าง</th></tr>`;
                 for(let dept in data) { html += `<tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:8px; font-weight:600;">${escapeHtml(dept)}</td><td style="padding:8px; text-align:center;">${data[dept].total}</td><td style="padding:8px; text-align:center; color:#166534;">${data[dept].completed}</td><td style="padding:8px; text-align:center; color:#dc2626;">${data[dept].pending}</td></tr>`; }
                 document.getElementById('analyticsContent').innerHTML = html + `</table>`;
-            });
+            }).catch(e=>{});
         }
 
         function openHistory(id, title) {
             let token = getToken(); if(!token) return;
             document.getElementById("historyOverlay").classList.add("active"); document.getElementById("historyModal").classList.add("active");
             document.getElementById("historyTitle").innerText = `ประวัติ: [${id}] ${title}`; document.getElementById("historyTimeline").innerHTML = `<div style="text-align:center; padding:20px;">กำลังโหลด...</div>`;
-            fetch(`${API_URL}?action=getHistory&fileId=${encodeURIComponent(id)}&token=${token}`).then(r=>r.json()).then(data => {
-                if(checkTokenError(data)) return;
+            fetchSafePOST({action:"getHistory", fileId:id, token:token}).then(data => {
                 let html = "";
-                data.forEach(h => { let imgLink = h.imgUrl ? `<br><a href="${h.imgUrl}" target="_blank" style="font-size:11px; color:#2563eb;"><i class="fa-solid fa-image"></i> เปิดดูภาพ</a>` : ""; html += `<div class="timeline-item"><div class="timeline-time">${escapeHtml(h.time)} • ${escapeHtml(h.loc)}</div><div class="timeline-status">${escapeHtml(h.status)}</div><div class="timeline-user"><i class="fa-solid fa-user-check"></i> ${escapeHtml(h.user)}</div>${imgLink}</div>`; });
+                data.forEach(h => { let imgLink = h.imgUrl ? `<br><a href="${h.imgUrl}" target="_blank" style="font-size:11px; color:#2563eb;"><i class="fa-solid fa-image"></i> เปิดดูภาพแนบ</a>` : ""; html += `<div class="timeline-item"><div class="timeline-time">${escapeHtml(h.time)} • ${escapeHtml(h.loc)}</div><div class="timeline-status">${escapeHtml(h.status)}</div><div class="timeline-user"><i class="fa-solid fa-user-check"></i> ${escapeHtml(h.user)}</div>${imgLink}</div>`; });
                 document.getElementById("historyTimeline").innerHTML = html || "<div style='text-align:center;'>ยังไม่มีประวัติ</div>";
-            });
+            }).catch(e=>{ document.getElementById("historyTimeline").innerHTML = "<div style='color:red; text-align:center;'>ดึงข้อมูลล้มเหลว</div>"; });
         }
         function closeHistory() { document.getElementById("historyOverlay").classList.remove("active"); document.getElementById("historyModal").classList.remove("active"); }
 
@@ -436,37 +426,27 @@
             const scanStatus = document.querySelector('input[name="scanStatus"]:checked').value; const imgInput = document.getElementById("correctionImage");
             if(scanStatus === "ส่งกลับแก้ไข" && imgInput.files.length > 0) {
                 const reader = new FileReader();
-                reader.onload = function(e) { fetchSafePOST({ action: "scan", fileId: text, dept: "", scanStatus: scanStatus, loc: document.getElementById("locScan").value, imageBase64: e.target.result, imageMime: imgInput.files[0].type, token: getToken() }).then(d=>{ alert(d.message); loadDash(); }); };
+                reader.onload = function(e) { fetchSafePOST({ action: "scan", fileId: text, dept: "", scanStatus: scanStatus, loc: document.getElementById("locScan").value, imageBase64: e.target.result, imageMime: imgInput.files[0].type, token: getToken() }).then(d=>{ alert(d.message); loadDash(); }).catch(e=>alert(e.message)); };
                 reader.readAsDataURL(imgInput.files[0]);
-            } else { fetchSafePOST({ action: "scan", fileId: text, dept: "", scanStatus: scanStatus, loc: document.getElementById("locScan").value, token: getToken() }).then(d=>{ alert(d.message); loadDash(); }); }
+            } else { fetchSafePOST({ action: "scan", fileId: text, dept: "", scanStatus: scanStatus, loc: document.getElementById("locScan").value, token: getToken() }).then(d=>{ alert(d.message); loadDash(); }).catch(e=>alert(e.message)); }
         }
         function manualScan() { const v = document.getElementById("manualIdScan").value.trim().toUpperCase(); if(v) runScan(v); }
         
-        // 🔴 แก้ไขฟังก์ชันผูกเรื่อง ให้ส่งค่า "เจ้าของเรื่อง" ไปด้วย
         function manualAssign() { 
-            const v = document.getElementById("manualIdAssign").value.trim().toUpperCase(); 
-            const t = document.getElementById("newDocTitle").value.trim(); 
-            const o = document.getElementById("ownerAssign").value.trim() || "ไม่ระบุ"; // ดึงค่าเจ้าของเรื่อง
-            
-            if(!v || !t) return alert("กรุณาระบุเลขรหัสแฟ้ม และชื่อเรื่องให้ครบถ้วน"); 
-            fetchSafePOST({ action:"assign", fileId:v, title:t, urgency:document.getElementById("urgencyAssign").value, dept: "", loc:document.getElementById("locAssign").value, owner: o, token: getToken() }).then(d=>{ 
-                alert(d.message); loadDash(); document.getElementById("manualIdAssign").value=""; document.getElementById("newDocTitle").value=""; document.getElementById("ownerAssign").value="";
-            }); 
+            const v = document.getElementById("manualIdAssign").value.trim().toUpperCase(); const t = document.getElementById("newDocTitle").value.trim(); const o = document.getElementById("ownerAssign").value.trim() || "ไม่ระบุ";
+            if(!v || !t) return alert("กรุณาระบุเลขรหัสแฟ้ม และชื่อเรื่อง"); 
+            fetchSafePOST({ action:"assign", fileId:v, title:t, urgency:document.getElementById("urgencyAssign").value, dept: "", loc:document.getElementById("locAssign").value, owner: o, token: getToken() }).then(d=>{ alert(d.message); loadDash(); document.getElementById("manualIdAssign").value=""; document.getElementById("newDocTitle").value=""; document.getElementById("ownerAssign").value=""; }).catch(e=>alert(e.message)); 
         }
-
         function runAssign(text) { 
-            const t = document.getElementById("newDocTitle").value.trim(); 
-            const o = document.getElementById("ownerAssign").value.trim() || "ไม่ระบุ";
-            if(!t) return alert("กรุณาพิมพ์ระบุชื่อเรื่องก่อนสแกนกล้อง"); 
-            fetchSafePOST({ action:"assign", fileId:text, title:t, urgency:document.getElementById("urgencyAssign").value, dept: "", loc:document.getElementById("locAssign").value, owner: o, token: getToken() }).then(d=>{ 
-                alert(d.message); loadDash(); document.getElementById("newDocTitle").value=""; document.getElementById("ownerAssign").value="";
-            }); 
+            const t = document.getElementById("newDocTitle").value.trim(); const o = document.getElementById("ownerAssign").value.trim() || "ไม่ระบุ";
+            if(!t) return alert("กรุณาพิมพ์ชื่อเรื่องก่อนสแกนกล้อง"); 
+            fetchSafePOST({ action:"assign", fileId:text, title:t, urgency:document.getElementById("urgencyAssign").value, dept: "", loc:document.getElementById("locAssign").value, owner: o, token: getToken() }).then(d=>{ alert(d.message); loadDash(); document.getElementById("newDocTitle").value=""; document.getElementById("ownerAssign").value=""; }).catch(e=>alert(e.message)); 
         }
 
         document.getElementById('qr-assign').addEventListener('change', e => { if(e.target.files[0]) { html5QrCodeDummy.scanFile(e.target.files[0], true).then(runAssign).catch(err => alert("ไม่พบ QR Code")); e.target.value=''; } });
         document.getElementById('qr-scan').addEventListener('change', e => { if(e.target.files[0]) { html5QrCodeDummy.scanFile(e.target.files[0], true).then(runScan).catch(err => alert("ไม่พบ QR Code")); e.target.value=''; } });
 
-        let sTimeout; function debounceSearch() { let token = getToken(); if(!token) return; clearTimeout(sTimeout); const k = document.getElementById("searchInput").value.trim(); if(!k) { document.getElementById("miniDashboard").style.display="block"; document.getElementById("searchResults").innerHTML=""; return; } document.getElementById("miniDashboard").style.display="none"; sTimeout = setTimeout(() => { fetch(`${API_URL}?action=search&keyword=${encodeURIComponent(k)}&token=${token}`).then(r => r.json()).then(res => { if(checkTokenError(res)) return; let html = ""; if(!res || res.length===0) html = '<div style="text-align:center; color:#ef4444; padding:20px; font-weight:bold;">❌ ไม่พบข้อมูลแฟ้ม</div>'; else res.forEach(f => { html += `<div class="accordion-item" style="padding:12px;">${buildFileHTML(f)}</div>`; }); document.getElementById("searchResults").innerHTML = html; }); }, 400); }
+        let sTimeout; function debounceSearch() { let token = getToken(); if(!token) return; clearTimeout(sTimeout); const k = document.getElementById("searchInput").value.trim(); if(!k) { document.getElementById("miniDashboard").style.display="block"; document.getElementById("searchResults").innerHTML=""; return; } document.getElementById("miniDashboard").style.display="none"; sTimeout = setTimeout(() => { fetchSafePOST({action:"search", keyword:k, token:token}).then(res => { let html = ""; if(!res || res.length===0) html = '<div style="text-align:center; color:#ef4444; padding:20px; font-weight:bold;">❌ ไม่พบข้อมูลแฟ้ม</div>'; else res.forEach(f => { html += `<div class="accordion-item" style="padding:12px;">${buildFileHTML(f)}</div>`; }); document.getElementById("searchResults").innerHTML = html; }).catch(e=>{}); }, 400); }
 
         function importCSV() {
             const file = document.getElementById('csvFileInput').files[0]; if(!file) return alert("กรุณาเลือกไฟล์ CSV"); const reader = new FileReader();
@@ -474,13 +454,12 @@
                 const lines = e.target.result.split('\n'); let users = [];
                 for(let i=1; i<lines.length; i++) { let cols = lines[i].split(','); if(cols.length >= 3 && cols[0].trim() !== "") { users.push({ name: cols[0].trim(), dept: cols[1].trim(), role: cols[2].trim() }); } }
                 if(users.length === 0) return alert("ไม่พบข้อมูล");
-                if(confirm(`เตรียมนำเข้า ${users.length} รายชื่อ ยืนยันหรือไม่?`)) { fetchSafePOST({action:"admin_import_users", users: users, token: getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); }); }
+                if(confirm(`เตรียมนำเข้า ${users.length} รายชื่อ ยืนยันหรือไม่?`)) { fetchSafePOST({action:"admin_import_users", users: users, token: getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); }).catch(e=>alert(e.message)); }
             }; reader.readAsText(file);
         }
 
         function loadAdminUsers() {
-            fetch(`${API_URL}?action=admin_get_users&token=${getToken()}`).then(r=>r.json()).then(data=>{
-                if(checkTokenError(data)) return;
+            fetchSafePOST({action:"admin_get_users", token:getToken()}).then(data=>{
                 let html = `<table style="width:100%; border-collapse:collapse;"><tr style="background:#f8fafc;"><th style="padding:5px;text-align:left;">ผู้ใช้งาน</th><th>สถานะ/สิทธิ์</th></tr>`;
                 data.forEach(u => {
                     let roleDropdown = `<select onchange="updateRole('${u.name}', this.value)" style="font-size:11px; padding:4px; border-radius:4px; border:1px solid #cbd5e1; outline:none; background:${u.role==='รออนุมัติ'?'#fee2e2':'#f0fdf4'}; color:${u.role==='รออนุมัติ'?'#991b1b':'#166534'}; font-weight:bold;">
@@ -495,24 +474,23 @@
                     let delBtn = (u.role === "Admin" && u.name.replace(/\s+/g,"") === localStorage.getItem("bpp_user").replace(/\s+/g,"")) ? "" : `<button onclick="deleteUser('${u.name}')" style="background:#dc2626; color:white; border:none; border-radius:4px; padding:4px 8px; margin-left:5px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>`;
                     html += `<tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:5px; font-size:12px; font-weight:600; color:var(--navy);">${escapeHtml(u.name)}<br><span style="color:#64748b; font-weight:normal; font-size:10px;">${escapeHtml(u.dept)}</span></td><td style="text-align:right;">${roleDropdown}${delBtn}</td></tr>`;
                 }); document.getElementById('adminUserList').innerHTML = html + `</table>`;
-            });
+            }).catch(e=>alert(e.message));
         }
 
-        function updateRole(name, newRole) { if(!confirm(`ต้องการเปลี่ยนสิทธิ์ของ [ ${name} ] เป็น [ ${newRole} ]?`)) return loadAdminUsers(); fetchSafePOST({action:"admin_update_role", targetName:name, newRole:newRole, token:getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); }); }
-        function deleteUser(name) { if(!confirm(`ลบ ${name} ออกจากระบบถาวร?`)) return; fetchSafePOST({action:"admin_delete_user", targetName:name, token:getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); }); }
-        function archiveSystem() { if(!confirm("จัดเก็บแฟ้มที่ 'เสร็จสิ้น' เข้าคลังถาวร?")) return; fetchSafePOST({action:"admin_archive", token:getToken()}).then(d=>{ alert(d.message); loadDash(); }); }
+        function updateRole(name, newRole) { if(!confirm(`ต้องการเปลี่ยนสิทธิ์ของ [ ${name} ] เป็น [ ${newRole} ]?`)) return loadAdminUsers(); fetchSafePOST({action:"admin_update_role", targetName:name, newRole:newRole, token:getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); }).catch(e=>alert(e.message)); }
+        function deleteUser(name) { if(!confirm(`ลบ ${name} ออกจากระบบถาวร?`)) return; fetchSafePOST({action:"admin_delete_user", targetName:name, token:getToken()}).then(d=>{ alert(d.message); loadAdminUsers(); }).catch(e=>alert(e.message)); }
+        function archiveSystem() { if(!confirm("จัดเก็บแฟ้มที่ 'เสร็จสิ้น' เข้าคลังถาวร?")) return; fetchSafePOST({action:"admin_archive", token:getToken()}).then(d=>{ alert(d.message); loadDash(); }).catch(e=>alert(e.message)); }
 
         function loadAdminLogs() {
-            fetch(`${API_URL}?action=admin_get_syslogs&token=${getToken()}`).then(r=>r.json()).then(data=>{
-                if(checkTokenError(data)) return;
+            fetchSafePOST({action:"admin_get_syslogs", token:getToken()}).then(data=>{
                 let html = ""; data.forEach(l => { html += `<div style="border-bottom:1px dashed #e2e8f0; padding:4px 0;"><span style="color:#64748b;">${escapeHtml(l.time)}</span> <b style="color:var(--navy);">${escapeHtml(l.fileId)}</b> ➔ ${escapeHtml(l.status)} โดย ${escapeHtml(l.user)}</div>`; });
                 document.getElementById('adminLogList').innerHTML = html || "ไม่มีประวัติการทำงาน";
-            });
+            }).catch(e=>alert(e.message));
         }
         
         function updateAnnouncement() { 
             const text = document.getElementById("announcementInput").value.trim(); if(!text) return alert("กรุณาพิมพ์ข้อความที่ต้องการประกาศ");
-            fetchSafePOST({ action:"announce", text:text, token:getToken() }).then(d=>{ alert(d.message); document.getElementById("marqueeText").innerHTML = `<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(text)}`; document.getElementById("announcementInput").value = ""; }); 
+            fetchSafePOST({ action:"announce", text:text, token:getToken() }).then(d=>{ alert(d.message); document.getElementById("marqueeText").innerHTML = `<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(text)}`; document.getElementById("announcementInput").value = ""; }).catch(e=>alert(e.message)); 
         }
     </script>
 </body>
