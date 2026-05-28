@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        :root { --navy: #002D62; --navy-light: #004080; --gold: #FFD700; --bg: #f4f7fb; --card: #ffffff; --text: #1e293b; --text-light: #64748b; --border: #e2e8f0; }
+        :root { --navy: #002D62; --navy-light: #004080; --gold: #FFD700; --bg: #f4f7fb; --card: #ffffff; --text: #1e293b; --text-light: #64748b; --border: #e2e8f0; --shimmer1: #f6f7f8; --shimmer2: #edeef1; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Sarabun', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
         
@@ -21,7 +21,6 @@
         .header h1 { font-size: 18px; font-weight: 700; margin: 0; }
         .header-dev { font-size: 9px; color: #94a3b8; margin-top: 6px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; }
         
-        /* แถบเรียลไทม์ออนไลน์ */
         .live-bar { background: #e2e8f0; color: var(--navy); font-size: 10px; text-align: center; padding: 4px; font-weight: 600; }
 
         .container { padding: 12px; max-width: 500px; margin: 0 auto; }
@@ -43,7 +42,8 @@
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: #fff; }
         .accordion-content.expanded { max-height: 2000px; }
         
-        .file-item { padding: 12px; border-top: 1px dashed var(--border); background: #fff; }
+        .file-item { padding: 12px; border-top: 1px dashed var(--border); background: #fff; cursor: pointer; transition: background 0.2s; }
+        .file-item:hover { background: #f8fafc; }
         .file-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
         .file-meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px; color: var(--text-light); }
         .tag { background: #f1f5f9; padding: 3px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #e2e8f0; font-weight: 500; }
@@ -81,6 +81,37 @@
         .nav-item.active { color: var(--navy); }
         .nav-item.active i { color: var(--gold); }
         hr.divider { border: 0; border-top: 1px dashed var(--border); margin: 15px 0; }
+
+        /* [H-4] Skeleton UI */
+        @keyframes shimmer { 0% {background-position: -1000px 0} 100% {background-position: 1000px 0} }
+        .skeleton-card { background: var(--shimmer1); background-image: linear-gradient(to right, var(--shimmer1) 0%, var(--shimmer2) 20%, var(--shimmer1) 40%, var(--shimmer1) 100%); background-repeat: no-repeat; background-size: 800px 100px; animation: shimmer 2s infinite linear; height: 60px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); }
+        
+        /* [L-2] Offline Bar */
+        .offline-bar { position: fixed; bottom: 65px; left: 0; width: 100%; background: #dc2626; color: white; padding: 8px; text-align: center; font-size: 12px; z-index: 99; display: none; font-weight: 600; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .offline-bar button { background: white; color: #dc2626; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; margin-left: 10px; cursor: pointer; }
+
+        /* [U-4] History Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; display: none; opacity: 0; transition: opacity 0.3s; }
+        .modal-overlay.active { display: block; opacity: 1; }
+        .modal-content { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-radius: 20px 20px 0 0; padding: 20px; z-index: 201; transition: bottom 0.3s; max-height: 80vh; overflow-y: auto; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); }
+        .modal-content.active { bottom: 0; }
+        .modal-close { position: absolute; top: 15px; right: 15px; font-size: 20px; color: var(--text-light); cursor: pointer; width: 30px; height: 30px; text-align: center; line-height: 30px; background: #f1f5f9; border-radius: 50%; }
+        .timeline-item { position: relative; padding-left: 20px; margin-bottom: 15px; border-left: 2px solid var(--border); }
+        .timeline-item::before { content: ''; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--navy); }
+        .timeline-time { font-size: 10px; color: var(--text-light); }
+        .timeline-status { font-size: 13px; font-weight: 600; color: var(--navy); }
+        .timeline-user { font-size: 11px; color: var(--text-light); }
+        
+        /* [U-5] Print Media */
+        .qr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .qr-item { text-align: center; border: 1px dashed var(--border); padding: 10px; border-radius: 8px; }
+        @media print { 
+            body * { visibility: hidden; } 
+            #qrResult, #qrResult * { visibility: visible; } 
+            #qrResult { position: absolute; left: 0; top: 0; width: 100%; } 
+            .qr-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+            .btn-action, .btn-camera { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -94,6 +125,7 @@
     </div>
     
     <div class="live-bar" id="liveUserBar"><i class="fa-solid fa-users"></i> ผู้ใช้งานขณะนี้: - คน</div>
+    <div class="offline-bar" id="offlineBar">⚠️ ไม่สามารถเชื่อมต่อได้ — ข้อมูลล่าสุด: <span id="lastUpdatedOffline">-</span> <button onclick="liveSync()">🔄 ลองใหม่</button></div>
 
     <datalist id="userList"></datalist>
     <datalist id="fileIdList"></datalist>
@@ -113,8 +145,13 @@
                 </div>
                 
                 <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px;"><i class="fa-solid fa-layer-group"></i> แฟ้มด่วน และ แฟ้มที่อนุมัติแล้ว</div>
-                <div id="dash-top-accordion"></div> <div style="font-size:13px; font-weight:700; color:var(--text); margin: 15px 0 8px 0;"><i class="fa-regular fa-folder-open"></i> แฟ้มอยู่ระหว่างการดำเนินการ (แยกแผนก)</div>
-                <div id="dash-accordion"><div style="text-align:center; padding:15px; color:#94a3b8; font-size:12px;"><i class="fa-solid fa-circle-notch fa-spin"></i> กำลังซิงค์ข้อมูล...</div></div>
+                <div id="dash-top-accordion"></div> 
+
+                <div style="font-size:13px; font-weight:700; color:var(--text); margin: 15px 0 8px 0;"><i class="fa-regular fa-folder-open"></i> แฟ้มอยู่ระหว่างการดำเนินการ (แยกแผนก)</div>
+                <div id="dash-accordion">
+                    <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
+                </div>
+                <div id="lastUpdatedText" style="text-align:center; font-size:10px; color:#94a3b8; margin-top:8px;"></div>
             </div>
             <div id="searchResults" style="margin-top: 10px;"></div>
         </div>
@@ -159,7 +196,7 @@
                 
                 <div id="photoUploadSection" style="display:none; background:#fef2f2; padding:10px; border-radius:8px; margin-bottom:12px; border:1px dashed #fca5a5;">
                     <div style="font-size:12px; font-weight:700; color:#dc2626; margin-bottom:5px;"><i class="fa-solid fa-camera"></i> ถ่ายภาพจุดที่ต้องแก้ไข (หน้าห้อง)</div>
-                    <input type="file" id="correctionImage" accept="image/*" capture="environment" class="form-control" style="margin-bottom:0;">
+                    <input type="file" id="correctionImage" accept="image/jpeg, image/png, image/webp" capture="environment" class="form-control" style="margin-bottom:0;">
                 </div>
 
                 <div style="font-size:12px; font-weight:600; margin-bottom:5px; color:var(--text-light);">พิกัดล่าสุด:</div>
@@ -179,12 +216,16 @@
         <div id="tab-analytics" class="tab-content">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-chart-line"></i> แดชบอร์ดสถิติการเดินแฟ้ม</div>
-                <div id="analyticsContent"><div style="text-align:center; padding:15px; color:#94a3b8; font-size:12px;"><i class="fa-solid fa-circle-notch fa-spin"></i> กำลังวิเคราะห์ข้อมูล...</div></div>
+                <div id="analyticsContent"><div class="skeleton-card"></div></div>
             </div>
             <div class="card" id="adminQRZone" style="display:none;">
-                <div class="card-title"><i class="fa-solid fa-qrcode"></i> สร้าง QR Code แฟ้ม (แอดมิน)</div>
-                <div class="input-group"><input type="text" id="qrGenInput" class="form-control" placeholder="รหัสแฟ้ม"><button class="btn-action" onclick="generateQR()">สร้าง</button></div>
-                <div id="qrResult" style="text-align:center; display:none;"><img id="qrImage" src="" style="width:150px; margin-top:10px;"><div id="qrTextDisplay" style="font-weight:700;"></div></div>
+                <div class="card-title"><i class="fa-solid fa-qrcode"></i> สร้าง QR Code แบบกลุ่ม (แอดมิน)</div>
+                <textarea id="qrGenInput" class="form-control" placeholder="รหัสแฟ้ม (ขึ้นบรรทัดใหม่สำหรับหลายแฟ้ม)" rows="3"></textarea>
+                <button class="btn-action" style="width:100%; padding:12px;" onclick="generateBatchQR()"><i class="fa-solid fa-qrcode"></i> สร้างรูปภาพ QR</button>
+                <div id="qrResult" style="display:none;">
+                    <div class="qr-grid" id="qrGridContent"></div>
+                    <button class="btn-camera" onclick="window.print()" style="background:#10b981; margin-top:15px;"><i class="fa-solid fa-print"></i> พิมพ์ / บันทึก PDF</button>
+                </div>
             </div>
         </div>
 
@@ -227,43 +268,62 @@
         <div class="nav-item" onclick="switchTab('tab-profile', this)"><i class="fa-solid fa-user-lock"></i><span>ตั้งค่า</span></div>
     </div>
 
-    <script>
-        // =========================================================
-        // 🔴 นำ URL ของ API ที่ Deploy แบบ "ทุกคน (Anyone)" มาวางตรงนี้ 🔴
-        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2FkTlnjr8yiSdMm6kkR8I9mBwEcq9FvRjOTLuLQci/exec"; 
-        // =========================================================
+    <div class="modal-overlay" id="historyOverlay" onclick="closeHistory()"></div>
+    <div class="modal-content" id="historyModal">
+        <div class="modal-close" onclick="closeHistory()"><i class="fa-solid fa-xmark"></i></div>
+        <div style="font-size:15px; font-weight:700; color:var(--navy); margin-bottom:15px;" id="historyTitle">ประวัติแฟ้ม</div>
+        <div id="historyTimeline"><div style="text-align:center; padding:20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> กำลังโหลดประวัติ...</div></div>
+    </div>
 
+    <script>
+        const API_URL = "YOUR_DEPLOYMENT_URL_HERE"; 
+        
+        let lastUpdatedStr = "-";
         let inactivityTime = function () {
-            let time; window.onload = resetTimer; document.onmousemove = resetTimer; document.onkeydown = resetTimer; document.ontouchstart = resetTimer;
-            function doLogout() { if(localStorage.getItem("bpp_role")) { localStorage.clear(); alert("⚠️ หมดเวลาเซสชัน (5 นาที) ระบบล็อกเอาท์อัตโนมัติ"); location.reload(); } }
+            let time; window.addEventListener("load", resetTimer); document.addEventListener("mousemove", resetTimer); document.addEventListener("keydown", resetTimer); document.addEventListener("touchstart", resetTimer);
+            function doLogout() { if(sessionStorage.getItem("bpp_token")) { sessionStorage.clear(); localStorage.removeItem("bpp_user"); alert("⚠️ หมดเวลาเซสชัน (5 นาที) ระบบล็อกเอาท์อัตโนมัติ"); location.reload(); } }
             function resetTimer() { clearTimeout(time); time = setTimeout(doLogout, 300000); } 
         }; inactivityTime();
 
-        function logoutManual() { if(confirm("ออกจากระบบ?")) { localStorage.clear(); location.reload(); } }
+        function logoutManual() { 
+            if(confirm("ออกจากระบบ?")) { 
+                fetch(`${API_URL}?action=logout&token=${sessionStorage.getItem("bpp_token")}`);
+                sessionStorage.clear(); localStorage.removeItem("bpp_user"); localStorage.removeItem("bpp_role"); location.reload(); 
+            } 
+        }
+
+        // [M-3] XSS Prevention
+        function escapeHtml(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+        function fetchWithTimeout(url, options, timeout = 12000) {
+            return Promise.race([fetch(url, options), new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), timeout))]);
+        }
 
         window.onload = function() {
-            fetch(`${API_URL}?action=getConfig`).then(r=>r.json()).then(d=> document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${d.text||"ระบบพร้อมใช้งาน"}`);
-            fetch(`${API_URL}?action=getUserList`).then(r=>r.json()).then(data => {
+            fetchWithTimeout(`${API_URL}?action=getConfig`).then(r=>r.json()).then(d=> document.getElementById("marqueeText").innerHTML=`<i class="fa-solid fa-bullhorn"></i> ${escapeHtml(d.text)||"ระบบพร้อมใช้งาน"}`).catch(e=>{});
+            fetchWithTimeout(`${API_URL}?action=getUserList`).then(r=>r.json()).then(data => {
                 let uList = document.getElementById("userList"), fList = document.getElementById("fileIdList");
-                data.names.forEach(n => uList.appendChild(new Option(n)));
-                data.ids.forEach(i => fList.appendChild(new Option(i)));
-            });
+                data.names.forEach(n => uList.appendChild(new Option(n))); data.ids.forEach(i => fList.appendChild(new Option(i)));
+            }).catch(e=>{});
 
-            if(localStorage.getItem("bpp_user")) {
+            if(sessionStorage.getItem("bpp_token") && localStorage.getItem("bpp_user")) {
                 document.getElementById("userName").value = localStorage.getItem("bpp_user");
-                if(localStorage.getItem("bpp_role")) {
-                    document.getElementById("loginForm").style.display = "none"; document.getElementById("btnLogout").style.display = "block";
-                    document.getElementById("authStatus").innerHTML = `<span style="color:#166534;"><i class="fa-solid fa-circle-check"></i> เข้าสู่ระบบฐานะ: [ ${localStorage.getItem("bpp_role")} ]</span>`;
-                    if(localStorage.getItem("bpp_role") === "Admin") { document.getElementById("adminPanel").style.display="block"; document.getElementById("adminQRZone").style.display="block"; }
-                }
+                document.getElementById("loginForm").style.display = "none"; document.getElementById("btnLogout").style.display = "block";
+                document.getElementById("authStatus").innerHTML = `<span style="color:#166534;"><i class="fa-solid fa-circle-check"></i> เข้าสู่ระบบฐานะ: [ ${escapeHtml(localStorage.getItem("bpp_role"))} ]</span>`;
+                if(localStorage.getItem("bpp_role") === "Admin") { document.getElementById("adminPanel").style.display="block"; document.getElementById("adminQRZone").style.display="block"; }
             }
             liveSync(); setInterval(liveSync, 15000); 
         };
 
         function liveSync() {
             let u = localStorage.getItem("bpp_user") || "";
-            fetch(`${API_URL}?action=ping&user=${encodeURIComponent(u)}`).then(r=>r.json()).then(res => {
-                document.getElementById("liveUserBar").innerHTML = `<i class="fa-solid fa-users"></i> ผู้ใช้งานระบบขณะนี้: ${res.count} คน (${res.text})`;
+            fetchWithTimeout(`${API_URL}?action=ping&user=${encodeURIComponent(u)}`, {}, 8000).then(r=>r.json()).then(res => {
+                document.getElementById("liveUserBar").innerHTML = `<i class="fa-solid fa-users"></i> ผู้ใช้งานระบบขณะนี้: ${res.count} คน (${escapeHtml(res.text)})`;
+                if(res.overloaded) console.log("ระบบมีผู้ใช้งานหนาแน่น");
+                document.getElementById("offlineBar").style.display = "none";
+            }).catch(e => {
+                document.getElementById("offlineBar").style.display = "block";
+                document.getElementById("lastUpdatedOffline").innerText = lastUpdatedStr;
             });
             if(document.getElementById("tab-search").classList.contains("active")) loadDash();
             if(document.getElementById("tab-analytics").classList.contains("active")) loadAnalytics();
@@ -274,17 +334,19 @@
             document.getElementById("photoUploadSection").style.display = (status === "ส่งกลับแก้ไข") ? "block" : "none";
         }
 
+        // [C-4] ส่ง token แทนรหัสผ่าน
         function sendPostRequest(payload, successMsgId) {
             const btn = document.getElementById(successMsgId); btn.style.display="block"; btn.style.background="#fef9c3"; btn.style.color="#854d0e"; btn.innerHTML="กำลังซิงค์คลาวด์...";
-            fetch(API_URL, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload) })
+            payload.token = sessionStorage.getItem("bpp_token");
+            fetchWithTimeout(API_URL, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload) })
             .then(r=>r.json()).then(d=>{
                 if(d.status==="success") {
-                    btn.style.background="#dcfce7"; btn.style.color="#166534"; btn.innerHTML=`<i class="fa-solid fa-check"></i> ${d.message}`;
+                    btn.style.background="#dcfce7"; btn.style.color="#166534"; btn.innerHTML=`<i class="fa-solid fa-check"></i> ${escapeHtml(d.message)}`;
                     setTimeout(()=>btn.style.display="none", 3000);
                     if(payload.action==="assign") { document.getElementById("newDocTitle").value=""; document.getElementById("manualIdAssign").value=""; }
                     if(payload.action==="scan") { document.getElementById("manualIdScan").value=""; document.getElementById("correctionImage").value=""; }
                     liveSync();
-                } else { btn.style.background="#fee2e2"; btn.style.color="#991b1b"; btn.innerHTML=`<i class="fa-solid fa-xmark"></i> ${d.message}`; }
+                } else { btn.style.background="#fee2e2"; btn.style.color="#991b1b"; btn.innerHTML=`<i class="fa-solid fa-xmark"></i> ${escapeHtml(d.message)}`; }
             }).catch(()=> { btn.style.background="#fee2e2"; btn.style.color="#991b1b"; btn.innerHTML=`การเชื่อมต่อล้มเหลว`; });
         }
 
@@ -292,25 +354,27 @@
             const n = document.getElementById("userName").value.trim(), p = document.getElementById("userPassword").value.trim(); 
             if(n.length<3 || p.length===0) return alert("กรอกชื่อ/รหัสให้ครบ");
             document.getElementById("btnVerify").innerHTML = "กำลังตรวจสอบ...";
-            fetch(`${API_URL}?action=verify&name=${encodeURIComponent(n)}&pass=${encodeURIComponent(p)}`).then(r=>r.json()).then(res=>{
-                if(res.auth) { localStorage.setItem("bpp_user",n); localStorage.setItem("bpp_pass",p); localStorage.setItem("bpp_dept",res.dept); localStorage.setItem("bpp_role",res.role); location.reload(); } 
-                else { localStorage.clear(); alert("ชื่อหรือรหัสไม่ถูกต้อง"); document.getElementById("btnVerify").innerHTML = "เข้าสู่ระบบ"; }
-            }); 
+            fetchWithTimeout(`${API_URL}?action=login&name=${encodeURIComponent(n)}&pass=${encodeURIComponent(p)}`).then(r=>r.json()).then(res=>{
+                if(res.auth) { 
+                    sessionStorage.setItem("bpp_token", res.token); localStorage.setItem("bpp_user",n); 
+                    localStorage.setItem("bpp_role", res.role); location.reload(); 
+                } 
+                else { sessionStorage.clear(); alert("ชื่อหรือรหัสไม่ถูกต้อง"); document.getElementById("btnVerify").innerHTML = "เข้าสู่ระบบ"; }
+            }).catch(() => { document.getElementById("btnVerify").innerHTML = "ลองอีกครั้ง (ขัดข้อง)"; }); 
         }
 
-        function registerNew() {
-            sendPostRequest({ action:"register", adminName:localStorage.getItem("bpp_user"), adminPass:localStorage.getItem("bpp_pass"), newName:document.getElementById("addName").value.trim(), newDept:document.getElementById("addDept").value, newRole:document.getElementById("addRole").value, newPassword:document.getElementById("addPassword").value.trim() }, "authStatus");
-        }
-        function updateAnnouncement() { sendPostRequest({ action:"announce", adminName:localStorage.getItem("bpp_user"), adminPass:localStorage.getItem("bpp_pass"), text:document.getElementById("announcementInput").value.trim() }, "authStatus"); }
+        function registerNew() { sendPostRequest({ action:"register", newName:document.getElementById("addName").value.trim(), newDept:document.getElementById("addDept").value, newRole:document.getElementById("addRole").value, newPassword:document.getElementById("addPassword").value.trim() }, "authStatus"); }
+        function updateAnnouncement() { sendPostRequest({ action:"announce", text:document.getElementById("announcementInput").value.trim() }, "authStatus"); }
 
         let scannerObj = null;
-        function stopScanner() { if(scannerObj) { try{scannerObj.clear();}catch(e){} scannerObj=null; } }
+        // [H-5] Fix Scanner re-init
+        function stopScanner() { if(scannerObj) { try{scannerObj.clear();}catch(e){} scannerObj=null; document.getElementById("reader-scan").innerHTML=""; document.getElementById("reader-assign").innerHTML=""; } }
         function initScan() { stopScanner(); scannerObj=new Html5QrcodeScanner("reader-scan",{fps:15,qrbox:{width:250,height:250}},false); scannerObj.render((t)=>{scannerObj.pause();runScan(t);setTimeout(()=>scannerObj.resume(),1500);}); }
         function initAssign() { stopScanner(); scannerObj=new Html5QrcodeScanner("reader-assign",{fps:15,qrbox:{width:250,height:250}},false); scannerObj.render((t)=>{scannerObj.pause();runAssign(t);setTimeout(()=>scannerObj.resume(),1500);}); }
 
         function switchTab(id, el) {
             const role = localStorage.getItem("bpp_role");
-            if((id==='tab-scan'||id==='tab-assign') && !role) { alert("กรุณาล็อกอินก่อนครับ"); switchTab('tab-profile', document.querySelectorAll('.nav-item')[4]); return; }
+            if((id==='tab-scan'||id==='tab-assign') && !sessionStorage.getItem("bpp_token")) { alert("กรุณาล็อกอินก่อนครับ"); switchTab('tab-profile', document.querySelectorAll('.nav-item')[4]); return; }
             if(id==='tab-assign' && role==='หน้าห้อง') return alert("เมนูผูกเรื่องสำหรับธุรการ");
             if(id==='tab-scan' && role==='ธุรการ') return alert("เมนูอัปเดตสำหรับหน้าห้อง (หรือเจ้าของงานเพื่อรับแฟ้มคืน)"); 
 
@@ -319,24 +383,25 @@
             if(id==='tab-scan') initScan(); else if(id==='tab-assign') initAssign(); else if(id==='tab-search') loadDash(); else if(id==='tab-analytics') loadAnalytics();
         }
 
-        function checkU() { const u = localStorage.getItem("bpp_user"), r = localStorage.getItem("bpp_role"); if(!u||!r){alert('ล็อกอินใหม่'); return null;} return {u, d:localStorage.getItem("bpp_dept")}; }
+        function checkU() { const u = localStorage.getItem("bpp_user"); if(!sessionStorage.getItem("bpp_token")){alert('ล็อกอินใหม่'); return null;} return {u}; }
         function getStatusClass(s) { if(s.includes("อนุมัติ")||s.includes("รับ")) return "status-ok"; if(s.includes("ตีกลับ")||s.includes("แก้ไข")) return "status-err"; if(s.includes("เสนอ")) return "status-info"; return "status-warn"; }
         function getUrgencyClass(u) { if(u==="ด่วนที่สุด") return "urg-red"; if(u==="ด่วนมาก") return "urg-orange"; if(u==="ด่วน") return "urg-yellow"; return "urg-normal"; }
         function toggleAcc(btn) { const c = btn.nextElementSibling, i = btn.querySelector('i'); if(c.classList.contains('expanded')){c.classList.remove('expanded');i.className="fa-solid fa-plus";} else {c.classList.add('expanded');i.className="fa-solid fa-minus";} }
         
+        // [M-3] Escape inputs in render, [U-4] Clickable Modal
         function buildFileHTML(f) { 
-            let sC = getStatusClass(f.action); let uH = f.urgency!=="ปกติ"?`<span class="tag ${getUrgencyClass(f.urgency)}"><i class="fa-solid fa-bolt"></i> ${f.urgency}</span>`:`<span class="tag urg-normal">ปกติ</span>`; 
-            let imgBtn = f.img ? `<a href="${f.img}" target="_blank" class="tag" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5; text-decoration:none;"><i class="fa-solid fa-image"></i> ดูภาพจุดแก้ไข</a>` : "";
-            return `<div class="file-item"><div class="file-title"><span style="color:var(--navy);">[ ${f.id} ]</span> ${f.title}</div><div class="file-meta"><span class="tag"><i class="fa-solid fa-location-dot"></i> ${f.loc}</span><span class="tag ${sC}"><i class="fa-solid fa-circle-info"></i> ${f.action}</span>${uH}<span class="tag"><i class="fa-regular fa-clock"></i> ${f.time}</span>${imgBtn}</div></div>`; 
+            let eId = escapeHtml(f.id), eTitle = escapeHtml(f.title), eAction = escapeHtml(f.action), eLoc = escapeHtml(f.loc), eTime = escapeHtml(f.time), eUrg = escapeHtml(f.urgency);
+            let sC = getStatusClass(eAction); let uH = eUrg!=="ปกติ"?`<span class="tag ${getUrgencyClass(eUrg)}"><i class="fa-solid fa-bolt"></i> ${eUrg}</span>`:`<span class="tag urg-normal">ปกติ</span>`; 
+            let imgBtn = f.img ? `<span class="tag" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;"><i class="fa-solid fa-image"></i> มีภาพแก้ไข</span>` : "";
+            return `<div class="file-item" onclick="openHistory('${eId}', '${eTitle}')"><div class="file-title"><span style="color:var(--navy);">[ ${eId} ]</span> ${eTitle}</div><div class="file-meta"><span class="tag"><i class="fa-solid fa-location-dot"></i> ${eLoc}</span><span class="tag ${sC}"><i class="fa-solid fa-circle-info"></i> ${eAction}</span>${uH}<span class="tag"><i class="fa-regular fa-clock"></i> ${eTime}</span>${imgBtn}</div></div>`; 
         }
 
+        // [H-4] Skeleton, Timeout, lastUpdated
         function loadDash() {
-            fetch(`${API_URL}?action=getDash`).then(r=>r.json()).then(data=>{
+            document.getElementById('dash-accordion').innerHTML = '<div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>';
+            fetchWithTimeout(`${API_URL}?action=getDash`).then(r=>r.json()).then(data=>{
                 if(data.error) return; 
-                
-                // 🔴 จุดที่แก้บั๊กคือตรงนี้ครับ ลบการเรียกใช้ dash-out ออกไปแล้ว
-                document.getElementById('dash-total').innerText=data.total; 
-                document.getElementById('dash-in').innerText=data.in;
+                document.getElementById('dash-total').innerText=data.total; document.getElementById('dash-in').innerText=data.in;
                 
                 let topHtml = "";
                 if(data.urgent.length > 0) {
@@ -352,52 +417,84 @@
                 let html = "";
                 data.sortedDepts.forEach(d => {
                     let fH = ""; d.files.forEach(f => fH += buildFileHTML(f));
-                    html += `<div class="accordion-item"><button class="accordion-btn" onclick="toggleAcc(this)"><div>${d.name} <span class="badge">${d.count} แฟ้ม</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${fH}</div></div>`;
+                    html += `<div class="accordion-item"><button class="accordion-btn" onclick="toggleAcc(this)"><div>${escapeHtml(d.name)} <span class="badge">${d.count} แฟ้ม</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${fH}</div></div>`;
                 });
                 document.getElementById('dash-accordion').innerHTML = html || "<div style='text-align:center; padding:15px; color:#94a3b8;'>ไม่มีประวัติแฟ้มค้าง</div>";
-            }).catch(e => console.log("หน้าจอแสดงผลขัดข้อง"));
+                
+                let now = new Date(); lastUpdatedStr = now.getHours().toString().padStart(2,'0')+":"+now.getMinutes().toString().padStart(2,'0')+" น.";
+                document.getElementById('lastUpdatedText').innerText = `อัปเดตล่าสุด ${lastUpdatedStr}`;
+            }).catch(e => {
+                document.getElementById('dash-accordion').innerHTML = `<div style="text-align:center; padding:15px; color:#dc2626;"><button class="btn-action" onclick="loadDash()">🔄 ลองใหม่</button></div>`;
+            });
         }
 
         function loadAnalytics() {
-            fetch(`${API_URL}?action=getAnalytics`).then(r=>r.json()).then(data=>{
-                let html = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:10px;">
-                <tr style="background:#f1f5f9; color:var(--navy);"><th style="padding:8px; text-align:left;">แผนก</th><th style="padding:8px;">เดินแฟ้มรวม</th><th style="padding:8px;">เสร็จสิ้น</th><th style="padding:8px;">คงค้าง</th></tr>`;
-                for(let dept in data) {
-                    html += `<tr style="border-bottom:1px solid #e2e8f0;">
-                    <td style="padding:8px; font-weight:600;">${dept}</td><td style="padding:8px; text-align:center;">${data[dept].total}</td>
-                    <td style="padding:8px; text-align:center; color:#166534;">${data[dept].completed}</td><td style="padding:8px; text-align:center; color:#dc2626;">${data[dept].pending}</td></tr>`;
-                }
-                html += `</table>`;
-                document.getElementById('analyticsContent').innerHTML = html;
-            });
+            document.getElementById('analyticsContent').innerHTML = '<div class="skeleton-card"></div>';
+            fetchWithTimeout(`${API_URL}?action=getAnalytics`).then(r=>r.json()).then(data=>{
+                let html = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:10px;"><tr style="background:#f1f5f9; color:var(--navy);"><th style="padding:8px; text-align:left;">แผนก</th><th style="padding:8px;">เดินแฟ้มรวม</th><th style="padding:8px;">เสร็จสิ้น</th><th style="padding:8px;">คงค้าง</th></tr>`;
+                for(let dept in data) { html += `<tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:8px; font-weight:600;">${escapeHtml(dept)}</td><td style="padding:8px; text-align:center;">${data[dept].total}</td><td style="padding:8px; text-align:center; color:#166534;">${data[dept].completed}</td><td style="padding:8px; text-align:center; color:#dc2626;">${data[dept].pending}</td></tr>`; }
+                document.getElementById('analyticsContent').innerHTML = html + `</table>`;
+            }).catch(e=>{});
         }
+
+        // [U-4] History Fetch & Render
+        function openHistory(id, title) {
+            document.getElementById("historyOverlay").classList.add("active");
+            let modal = document.getElementById("historyModal"); modal.classList.add("active");
+            document.getElementById("historyTitle").innerText = `ประวัติ: [${id}] ${title}`;
+            document.getElementById("historyTimeline").innerHTML = `<div style="text-align:center; padding:20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> กำลังโหลด...</div>`;
+            
+            fetchWithTimeout(`${API_URL}?action=getHistory&fileId=${encodeURIComponent(id)}`).then(r=>r.json()).then(data => {
+                let html = "";
+                data.forEach(h => {
+                    let imgLink = h.imgUrl ? `<br><a href="${h.imgUrl}" target="_blank" style="font-size:10px; color:#2563eb;"><i class="fa-solid fa-image"></i> เปิดดูภาพแนบ</a>` : "";
+                    html += `<div class="timeline-item"><div class="timeline-time">${escapeHtml(h.time)} • ${escapeHtml(h.loc)}</div><div class="timeline-status">${escapeHtml(h.status)}</div><div class="timeline-user"><i class="fa-solid fa-user"></i> ${escapeHtml(h.user)} (${escapeHtml(h.dept)})${imgLink}</div></div>`;
+                });
+                document.getElementById("historyTimeline").innerHTML = html || "<div style='text-align:center;'>ไม่มีประวัติ</div>";
+            }).catch(e => document.getElementById("historyTimeline").innerHTML = "<div style='text-align:center; color:red;'>ดึงข้อมูลล้มเหลว</div>");
+        }
+        function closeHistory() { document.getElementById("historyOverlay").classList.remove("active"); document.getElementById("historyModal").classList.remove("active"); }
 
         function runScan(text) { 
             const c = checkU(); if(!c) return; 
             const scanStatus = document.querySelector('input[name="scanStatus"]:checked').value;
-            let payload = { action: "scan", fileId: text, dept: c.d, scanStatus: scanStatus, loc: document.getElementById("locScan").value, user: c.u };
-            
+            let payload = { action: "scan", fileId: text, dept: "", scanStatus: scanStatus, loc: document.getElementById("locScan").value };
             const imgInput = document.getElementById("correctionImage");
             if(scanStatus === "ส่งกลับแก้ไข" && imgInput.files.length > 0) {
-                const reader = new FileReader();
-                document.getElementById("scanAlert").style.display="block"; document.getElementById("scanAlert").innerHTML="กำลังอัปโหลดรูปภาพ...";
-                reader.onload = function(e) {
-                    payload.imageBase64 = e.target.result;
-                    payload.imageMime = imgInput.files[0].type;
-                    sendPostRequest(payload, "scanAlert");
-                };
+                const reader = new FileReader(); document.getElementById("scanAlert").style.display="block"; document.getElementById("scanAlert").innerHTML="กำลังอัปโหลดรูปภาพ...";
+                reader.onload = function(e) { payload.imageBase64 = e.target.result; payload.imageMime = imgInput.files[0].type; sendPostRequest(payload, "scanAlert"); };
                 reader.readAsDataURL(imgInput.files[0]);
-            } else {
-                sendPostRequest(payload, "scanAlert"); 
-            }
+            } else { sendPostRequest(payload, "scanAlert"); }
         }
         
-        function runAssign(text) { const c = checkU(); if(!c) return; const t = document.getElementById("newDocTitle").value.trim(); if(!t) return alert("กรอกชื่อเรื่องก่อน"); sendPostRequest({ action:"assign", fileId:text, title:t, urgency:document.getElementById("urgencyAssign").value, dept:c.d, loc:document.getElementById("locAssign").value, user:c.u }, "assignStatus"); }
+        function runAssign(text) { const c = checkU(); if(!c) return; const t = document.getElementById("newDocTitle").value.trim(); if(!t) return alert("กรอกชื่อเรื่องก่อน"); sendPostRequest({ action:"assign", fileId:text, title:t, urgency:document.getElementById("urgencyAssign").value, dept:"", loc:document.getElementById("locAssign").value }, "assignStatus"); }
         function manualScan() { const v = document.getElementById("manualIdScan").value.trim().toUpperCase(); if(v) runScan(v); }
         function manualAssign() { const v = document.getElementById("manualIdAssign").value.trim().toUpperCase(); if(v) runAssign(v); }
         
-        function generateQR() { const text = document.getElementById("qrGenInput").value.trim().toUpperCase(); if(!text) return; document.getElementById("qrImage").src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(text)}&margin=10`; document.getElementById("qrTextDisplay").innerText = text; document.getElementById("qrResult").style.display = "block"; }
+        // [U-5] Batch QR Generator
+        function generateBatchQR() { 
+            const lines = document.getElementById("qrGenInput").value.split("\n"); 
+            let html = ""; let count = 0;
+            lines.forEach(text => {
+                let t = text.trim().toUpperCase();
+                if(t) {
+                    html += `<div class="qr-item"><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(t)}&margin=10" style="width:100%;"><div style="font-weight:700; font-size:12px; margin-top:5px; color:var(--navy);">${escapeHtml(t)}</div></div>`;
+                    count++;
+                }
+            });
+            if(count === 0) return alert("ระบุรหัสประจำเล่ม"); 
+            document.getElementById("qrGridContent").innerHTML = html; document.getElementById("qrResult").style.display = "block"; 
+        }
         
-        let sTimeout; function debounceSearch() { clearTimeout(sTimeout); const k = document.getElementById("searchInput").value.trim(); if(!k) { document.getElementById("miniDashboard").style.display="block"; document.getElementById("searchResults").innerHTML=""; return; } document.getElementById("miniDashboard").style.display="none"; sTimeout = setTimeout(() => { fetch(`${API_URL}?action=search&keyword=${encodeURIComponent(k)}`).then(r => r.json()).then(res => { let html = ""; if(!res || res.length===0) html = '<div style="text-align:center; color:#ef4444; padding:20px;">❌ ไม่พบข้อมูล</div>'; else res.forEach(f => { html += `<div class="accordion-item" style="padding:12px;">${buildFileHTML(f)}</div>`; }); document.getElementById("searchResults").innerHTML = html; }); }, 400); }
+        document.getElementById('qr-scan').addEventListener('change', e => { if(e.target.files[0]) { new Html5Qrcode("reader-scan").scanFile(e.target.files[0], true).then(runScan); e.target.value=''; }});
+        document.getElementById('qr-assign').addEventListener('change', e => { if(e.target.files[0]) { new Html5Qrcode("reader-assign").scanFile(e.target.files[0], true).then(runAssign); e.target.value=''; }});
+
+        let sTimeout; function debounceSearch() { clearTimeout(sTimeout); const k = document.getElementById("searchInput").value.trim(); if(!k) { document.getElementById("miniDashboard").style.display="block"; document.getElementById("searchResults").innerHTML=""; return; } document.getElementById("miniDashboard").style.display="none"; sTimeout = setTimeout(() => { fetchWithTimeout(`${API_URL}?action=search&keyword=${encodeURIComponent(k)}`).then(r => r.json()).then(res => { let html = ""; if(!res || res.length===0) html = '<div style="text-align:center; color:#ef4444; padding:20px;">❌ ไม่พบข้อมูล</div>'; else res.forEach(f => { html += `<div class="accordion-item" style="padding:12px;">${buildFileHTML(f)}</div>`; }); document.getElementById("searchResults").innerHTML = html; }).catch(e=>{}); }, 400); }
+        
+        // Touch events for Modal swipe down
+        let touchStartY = 0;
+        document.getElementById('historyModal').addEventListener('touchstart', e => touchStartY = e.changedTouches[0].screenY);
+        document.getElementById('historyModal').addEventListener('touchend', e => { if(e.changedTouches[0].screenY - touchStartY > 50) closeHistory(); });
     </script>
+</body>
 </html>
