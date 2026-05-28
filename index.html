@@ -276,7 +276,8 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2FkTlnjr8yiSdMm6kkR8I9mBwEcq9FvRjOTLuLQci/exec"; 
+        // 🔴 นำ URL ของ API ที่ Deploy แบบ "ทุกคน (Anyone)" มาวางตรงนี้ 🔴
+        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2fkTlnjr8yiSdMm6kkR8I9mBwECq9FvRjOTLuLQci/exec"; 
         
         let lastUpdatedStr = "-";
         let inactivityTime = function () {
@@ -292,7 +293,6 @@
             } 
         }
 
-        // [M-3] XSS Prevention
         function escapeHtml(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
         function fetchWithTimeout(url, options, timeout = 12000) {
@@ -334,7 +334,6 @@
             document.getElementById("photoUploadSection").style.display = (status === "ส่งกลับแก้ไข") ? "block" : "none";
         }
 
-        // [C-4] ส่ง token แทนรหัสผ่าน
         function sendPostRequest(payload, successMsgId) {
             const btn = document.getElementById(successMsgId); btn.style.display="block"; btn.style.background="#fef9c3"; btn.style.color="#854d0e"; btn.innerHTML="กำลังซิงค์คลาวด์...";
             payload.token = sessionStorage.getItem("bpp_token");
@@ -367,7 +366,6 @@
         function updateAnnouncement() { sendPostRequest({ action:"announce", text:document.getElementById("announcementInput").value.trim() }, "authStatus"); }
 
         let scannerObj = null;
-        // [H-5] Fix Scanner re-init
         function stopScanner() { if(scannerObj) { try{scannerObj.clear();}catch(e){} scannerObj=null; document.getElementById("reader-scan").innerHTML=""; document.getElementById("reader-assign").innerHTML=""; } }
         function initScan() { stopScanner(); scannerObj=new Html5QrcodeScanner("reader-scan",{fps:15,qrbox:{width:250,height:250}},false); scannerObj.render((t)=>{scannerObj.pause();runScan(t);setTimeout(()=>scannerObj.resume(),1500);}); }
         function initAssign() { stopScanner(); scannerObj=new Html5QrcodeScanner("reader-assign",{fps:15,qrbox:{width:250,height:250}},false); scannerObj.render((t)=>{scannerObj.pause();runAssign(t);setTimeout(()=>scannerObj.resume(),1500);}); }
@@ -388,7 +386,6 @@
         function getUrgencyClass(u) { if(u==="ด่วนที่สุด") return "urg-red"; if(u==="ด่วนมาก") return "urg-orange"; if(u==="ด่วน") return "urg-yellow"; return "urg-normal"; }
         function toggleAcc(btn) { const c = btn.nextElementSibling, i = btn.querySelector('i'); if(c.classList.contains('expanded')){c.classList.remove('expanded');i.className="fa-solid fa-plus";} else {c.classList.add('expanded');i.className="fa-solid fa-minus";} }
         
-        // [M-3] Escape inputs in render, [U-4] Clickable Modal
         function buildFileHTML(f) { 
             let eId = escapeHtml(f.id), eTitle = escapeHtml(f.title), eAction = escapeHtml(f.action), eLoc = escapeHtml(f.loc), eTime = escapeHtml(f.time), eUrg = escapeHtml(f.urgency);
             let sC = getStatusClass(eAction); let uH = eUrg!=="ปกติ"?`<span class="tag ${getUrgencyClass(eUrg)}"><i class="fa-solid fa-bolt"></i> ${eUrg}</span>`:`<span class="tag urg-normal">ปกติ</span>`; 
@@ -396,7 +393,6 @@
             return `<div class="file-item" onclick="openHistory('${eId}', '${eTitle}')"><div class="file-title"><span style="color:var(--navy);">[ ${eId} ]</span> ${eTitle}</div><div class="file-meta"><span class="tag"><i class="fa-solid fa-location-dot"></i> ${eLoc}</span><span class="tag ${sC}"><i class="fa-solid fa-circle-info"></i> ${eAction}</span>${uH}<span class="tag"><i class="fa-regular fa-clock"></i> ${eTime}</span>${imgBtn}</div></div>`; 
         }
 
-        // [H-4] Skeleton, Timeout, lastUpdated
         function loadDash() {
             document.getElementById('dash-accordion').innerHTML = '<div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>';
             fetchWithTimeout(`${API_URL}?action=getDash`).then(r=>r.json()).then(data=>{
@@ -437,12 +433,11 @@
             }).catch(e=>{});
         }
 
-        // [U-4] History Fetch & Render
         function openHistory(id, title) {
             document.getElementById("historyOverlay").classList.add("active");
             let modal = document.getElementById("historyModal"); modal.classList.add("active");
             document.getElementById("historyTitle").innerText = `ประวัติ: [${id}] ${title}`;
-            document.getElementById("historyTimeline").innerHTML = `<div style="text-align:center; padding:20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> กำลังโหลด...</div>`;
+            document.getElementById("historyTimeline").innerHTML = `<div style="text-align:center; padding:20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> กำลังโหลดประวัติ...</div>`;
             
             fetchWithTimeout(`${API_URL}?action=getHistory&fileId=${encodeURIComponent(id)}`).then(r=>r.json()).then(data => {
                 let html = "";
@@ -471,7 +466,6 @@
         function manualScan() { const v = document.getElementById("manualIdScan").value.trim().toUpperCase(); if(v) runScan(v); }
         function manualAssign() { const v = document.getElementById("manualIdAssign").value.trim().toUpperCase(); if(v) runAssign(v); }
         
-        // [U-5] Batch QR Generator
         function generateBatchQR() { 
             const lines = document.getElementById("qrGenInput").value.split("\n"); 
             let html = ""; let count = 0;
@@ -491,7 +485,6 @@
 
         let sTimeout; function debounceSearch() { clearTimeout(sTimeout); const k = document.getElementById("searchInput").value.trim(); if(!k) { document.getElementById("miniDashboard").style.display="block"; document.getElementById("searchResults").innerHTML=""; return; } document.getElementById("miniDashboard").style.display="none"; sTimeout = setTimeout(() => { fetchWithTimeout(`${API_URL}?action=search&keyword=${encodeURIComponent(k)}`).then(r => r.json()).then(res => { let html = ""; if(!res || res.length===0) html = '<div style="text-align:center; color:#ef4444; padding:20px;">❌ ไม่พบข้อมูล</div>'; else res.forEach(f => { html += `<div class="accordion-item" style="padding:12px;">${buildFileHTML(f)}</div>`; }); document.getElementById("searchResults").innerHTML = html; }).catch(e=>{}); }, 400); }
         
-        // Touch events for Modal swipe down
         let touchStartY = 0;
         document.getElementById('historyModal').addEventListener('touchstart', e => touchStartY = e.changedTouches[0].screenY);
         document.getElementById('historyModal').addEventListener('touchend', e => { if(e.changedTouches[0].screenY - touchStartY > 50) closeHistory(); });
