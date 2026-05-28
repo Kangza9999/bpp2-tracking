@@ -315,7 +315,7 @@
             liveSync(); setInterval(liveSync, 15000); 
         };
 
-        function liveSync() {
+       function liveSync() {
             let u = localStorage.getItem("bpp_user") || "";
             fetchWithTimeout(`${API_URL}?action=ping&user=${encodeURIComponent(u)}`, {}, 8000).then(r=>r.json()).then(res => {
                 document.getElementById("liveUserBar").innerHTML = `<i class="fa-solid fa-users"></i> ผู้ใช้งานระบบขณะนี้: ${res.count} คน (${escapeHtml(res.text)})`;
@@ -325,8 +325,10 @@
                 document.getElementById("offlineBar").style.display = "block";
                 document.getElementById("lastUpdatedOffline").innerText = lastUpdatedStr;
             });
-            if(document.getElementById("tab-search").classList.contains("active")) loadDash();
-            if(document.getElementById("tab-analytics").classList.contains("active")) loadAnalytics();
+            
+            // 🔴 ส่งค่า true เพื่อแจ้งว่าเป็น Background Sync หน้าจอจะไม่กระพริบขาว
+            if(document.getElementById("tab-search").classList.contains("active")) loadDash(true);
+            if(document.getElementById("tab-analytics").classList.contains("active")) loadAnalytics(true);
         }
 
         function togglePhotoUpload() {
@@ -393,8 +395,15 @@
             return `<div class="file-item" onclick="openHistory('${eId}', '${eTitle}')"><div class="file-title"><span style="color:var(--navy);">[ ${eId} ]</span> ${eTitle}</div><div class="file-meta"><span class="tag"><i class="fa-solid fa-location-dot"></i> ${eLoc}</span><span class="tag ${sC}"><i class="fa-solid fa-circle-info"></i> ${eAction}</span>${uH}<span class="tag"><i class="fa-regular fa-clock"></i> ${eTime}</span>${imgBtn}</div></div>`; 
         }
 
-        function loadDash() {
-            document.getElementById('dash-accordion').innerHTML = '<div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>';
+       // รับค่า isBackgroundSync ถ้าเป็นจริงจะไม่โชว์ Skeleton (ตัวโหลดสีเทา)
+        function loadDash(isBackgroundSync = false) {
+            if(!isBackgroundSync) {
+                document.getElementById('dash-accordion').innerHTML = '<div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>';
+            }
+            
+            // 🟢 จดจำสถานะว่ากำลังกางดูแฟ้มแผนกไหนค้างอยู่บ้าง (State Tracking)
+            let openIds = Array.from(document.querySelectorAll('.accordion-content.expanded')).map(el => el.previousElementSibling.getAttribute('data-id'));
+
             fetchWithTimeout(`${API_URL}?action=getDash`).then(r=>r.json()).then(data=>{
                 if(data.error) return; 
                 document.getElementById('dash-total').innerText=data.total; document.getElementById('dash-in').innerText=data.in;
@@ -402,30 +411,39 @@
                 let topHtml = "";
                 if(data.urgent.length > 0) {
                     let uH = ""; data.urgent.forEach(f => uH += buildFileHTML(f));
-                    topHtml += `<div class="accordion-item"><button class="accordion-btn" style="background:#fef2f2; color:#dc2626;" onclick="toggleAcc(this)"><div>🔥 แฟ้มด่วนที่สุด <span class="badge" style="background:#dc2626;">${data.urgent.length}</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${uH}</div></div>`;
+                    topHtml += `<div class="accordion-item"><button class="accordion-btn" data-id="urgent" style="background:#fef2f2; color:#dc2626;" onclick="toggleAcc(this)"><div>🔥 แฟ้มด่วนที่สุด <span class="badge" style="background:#dc2626;">${data.urgent.length}</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${uH}</div></div>`;
                 }
                 if(data.approved.length > 0) {
                     let aH = ""; data.approved.forEach(f => aH += buildFileHTML(f));
-                    topHtml += `<div class="accordion-item"><button class="accordion-btn" style="background:#f0fdf4; color:#166534;" onclick="toggleAcc(this)"><div>✅ แฟ้มอนุมัติแล้ว (รอรับคืน) <span class="badge" style="background:#166534;">${data.approved.length}</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${aH}</div></div>`;
+                    topHtml += `<div class="accordion-item"><button class="accordion-btn" data-id="approved" style="background:#f0fdf4; color:#166534;" onclick="toggleAcc(this)"><div>✅ แฟ้มอนุมัติแล้ว (รอรับคืน) <span class="badge" style="background:#166534;">${data.approved.length}</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${aH}</div></div>`;
                 }
                 document.getElementById('dash-top-accordion').innerHTML = topHtml;
 
                 let html = "";
                 data.sortedDepts.forEach(d => {
                     let fH = ""; d.files.forEach(f => fH += buildFileHTML(f));
-                    html += `<div class="accordion-item"><button class="accordion-btn" onclick="toggleAcc(this)"><div>${escapeHtml(d.name)} <span class="badge">${d.count} แฟ้ม</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${fH}</div></div>`;
+                    // เพิ่ม data-id เพื่อให้ระบบจำได้ว่าปุ่มไหนเป็นของแผนกไหน
+                    html += `<div class="accordion-item"><button class="accordion-btn" data-id="dept-${escapeHtml(d.name)}" onclick="toggleAcc(this)"><div>${escapeHtml(d.name)} <span class="badge">${d.count} แฟ้ม</span></div><i class="fa-solid fa-plus"></i></button><div class="accordion-content">${fH}</div></div>`;
                 });
                 document.getElementById('dash-accordion').innerHTML = html || "<div style='text-align:center; padding:15px; color:#94a3b8;'>ไม่มีประวัติแฟ้มค้าง</div>";
                 
+                // 🟢 คืนค่าสถานะ กางแฟ้มที่เปิดค้างไว้กลับมาอัตโนมัติ
+                document.querySelectorAll('.accordion-btn').forEach(btn => {
+                    if(openIds.includes(btn.getAttribute('data-id'))) {
+                        btn.nextElementSibling.classList.add('expanded');
+                        btn.querySelector('i').className = "fa-solid fa-minus";
+                    }
+                });
+
                 let now = new Date(); lastUpdatedStr = now.getHours().toString().padStart(2,'0')+":"+now.getMinutes().toString().padStart(2,'0')+" น.";
-                document.getElementById('lastUpdatedText').innerText = `อัปเดตล่าสุด ${lastUpdatedStr}`;
+                document.getElementById('lastUpdatedText').innerText = `อัปเดตข้อมูลล่าสุด ${lastUpdatedStr}`;
             }).catch(e => {
-                document.getElementById('dash-accordion').innerHTML = `<div style="text-align:center; padding:15px; color:#dc2626;"><button class="btn-action" onclick="loadDash()">🔄 ลองใหม่</button></div>`;
+                if(!isBackgroundSync) document.getElementById('dash-accordion').innerHTML = `<div style="text-align:center; padding:15px; color:#dc2626;"><button class="btn-action" onclick="loadDash()">🔄 ลองใหม่</button></div>`;
             });
         }
 
-        function loadAnalytics() {
-            document.getElementById('analyticsContent').innerHTML = '<div class="skeleton-card"></div>';
+        function loadAnalytics(isBackgroundSync = false) {
+            if(!isBackgroundSync) document.getElementById('analyticsContent').innerHTML = '<div class="skeleton-card"></div>';
             fetchWithTimeout(`${API_URL}?action=getAnalytics`).then(r=>r.json()).then(data=>{
                 let html = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:10px;"><tr style="background:#f1f5f9; color:var(--navy);"><th style="padding:8px; text-align:left;">แผนก</th><th style="padding:8px;">เดินแฟ้มรวม</th><th style="padding:8px;">เสร็จสิ้น</th><th style="padding:8px;">คงค้าง</th></tr>`;
                 for(let dept in data) { html += `<tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:8px; font-weight:600;">${escapeHtml(dept)}</td><td style="padding:8px; text-align:center;">${data[dept].total}</td><td style="padding:8px; text-align:center; color:#166534;">${data[dept].completed}</td><td style="padding:8px; text-align:center; color:#dc2626;">${data[dept].pending}</td></tr>`; }
