@@ -11,6 +11,7 @@
         :root { --navy: #002D62; --gold: #FFD700; --bg: #f4f7fb; --card: #ffffff; --text: #1e293b; --text-light: #64748b; --border: #e2e8f0; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Sarabun', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
+        
         .marquee-container { background: linear-gradient(270deg, #dc2626, #2563eb, #16a34a, #d97706, #9333ea, #be123c); background-size: 1200% 1200%; animation: gradientShift 30s ease infinite; color: white; padding: 10px 0; font-size: 14px; font-weight: 700; overflow: hidden; white-space: nowrap; position: relative; z-index: 101; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 2px solid rgba(255,255,255,0.2); }
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); letter-spacing: 0.5px; }
@@ -19,6 +20,7 @@
         .header { background: var(--navy); color: white; padding: 15px; text-align: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .header h1 { font-size: 18px; font-weight: 700; margin: 0; }
         .header-dev { font-size: 9px; color: #94a3b8; margin-top: 6px; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; }
+        
         .live-bar { background: #e2e8f0; color: var(--navy); font-size: 11px; text-align: center; padding: 6px; font-weight: 700; border-bottom: 1px solid #cbd5e1; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.02); }
         
         .container { padding: 12px; max-width: 500px; margin: 0 auto; }
@@ -52,6 +54,7 @@
         .tag { background: #f1f5f9; padding: 3px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #e2e8f0; font-weight: 500; }
         .tag.status-ok { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; } 
         .tag.status-warn { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; } 
+        .tag.status-info { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; } 
         .tag.status-err { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; } 
         .urg-red { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 700; }
         .urg-orange { background: #ffedd5; color: #ea580c; border: 1px solid #fdba74; font-weight: 700; }
@@ -106,6 +109,7 @@
 
     <div class="container">
         
+        <!-- แท็บยืนยันตัวตน -->
         <div id="tab-auth" class="tab-content active">
             <div class="card" id="loginCard">
                 <div class="card-title"><i class="fa-solid fa-right-to-bracket"></i> เข้าสู่ระบบสารบรรณ</div>
@@ -133,6 +137,7 @@
             </div>
         </div>
 
+        <!-- แดชบอร์ด -->
         <div id="tab-search" class="tab-content">
             <div class="search-box"><i class="fa-solid fa-search"></i><input type="text" id="searchInput" class="form-control" placeholder="ค้นหาเลขแฟ้ม, ชื่อเรื่อง หรือชื่อเจ้าของเรื่อง..." onkeyup="debounceSearch()"></div>
             <div id="miniDashboard">
@@ -147,6 +152,7 @@
             <div id="searchResults" style="margin-top: 10px;"></div>
         </div>
 
+        <!-- ผูกเรื่อง -->
         <div id="tab-assign" class="tab-content">
             <div class="card">
                 <div class="card-title" style="color: var(--purple);"><i class="fa-solid fa-folder-plus"></i> ผูกเรื่องเข้าแฟ้ม</div>
@@ -167,6 +173,7 @@
             </div>
         </div>
 
+        <!-- อัปเดตแฟ้ม -->
         <div id="tab-scan" class="tab-content">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-bolt"></i> อัปเดตสถานะแฟ้ม / เคลียร์แฟ้ม</div>
@@ -189,6 +196,7 @@
 
         <div id="tab-analytics" class="tab-content"><div class="card"><div class="card-title"><i class="fa-solid fa-chart-line"></i> แดชบอร์ดสถิติการเดินแฟ้ม</div><div id="analyticsContent"></div></div></div>
 
+        <!-- Profile & Admin Console -->
         <div id="tab-profile" class="tab-content">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-user-gear"></i> ข้อมูลบัญชีผู้เข้าใช้งาน</div>
@@ -220,6 +228,7 @@
         </div>
     </div>
 
+    <!-- เมนูด้านล่าง -->
     <div class="bottom-nav" id="mainNav">
         <div class="nav-item active" onclick="switchTab('tab-search', this)"><i class="fa-solid fa-chart-pie"></i><span>แดชบอร์ด</span></div>
         <div class="nav-item" onclick="switchTab('tab-assign', this)"><i class="fa-solid fa-folder-plus"></i><span>ผูกเรื่อง</span></div>
@@ -234,19 +243,17 @@
     <div id="dummy-reader" style="display:none;"></div>
 
     <script>
-        // 🔴 นำ URL ของ API ที่เพิ่งกด New Version มาวางตรงนี้
-        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2fkTlnjr8yiSdMm6kkR8I9mBwECq9FvRjOTLuLQci/exec";
+        // 🔴🔴🔴 นำ URL ของ API ที่เกิดจากปุ่ม "การทำให้ใช้งานได้รายการใหม่" มาวางตรงนี้ครับ 🔴🔴🔴
+        const API_URL = "https://script.google.com/macros/s/AKfycbwvIUI093e_N1lgzGhpxC_SGkG2FkTlnjr8yiSdMm6kkR8I9mBwEcq9FvRjOTLuLQci/exec";
 
         function getToken() { return localStorage.getItem("bpp_token") || sessionStorage.getItem("bpp_token"); }
         function escapeHtml(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
-        // 🔴 โค้ดพระเอก: ฟังก์ชันรับมือการส่งข้อมูล POST แบบเจาะกำแพง
+        // 🔴 ฟังก์ชันเชื่อมต่อเซิร์ฟเวอร์แบบ POST ที่เสถียรที่สุด 
         async function fetchSafePOST(payload) {
-            if (!API_URL || API_URL.includes("YOUR_DEPLOYMENT_URL")) {
-                throw new Error("⚠️ ยังไม่ได้ใส่ลิงก์ API_URL ในโค้ดหน้าบ้าน");
-            }
             try {
                 const response = await fetch(API_URL, { 
+                    redirect: "follow", // บังคับให้เบราว์เซอร์ตามลิงก์ Redirect ของ Google เสมอ
                     method: "POST", 
                     headers: { "Content-Type": "text/plain;charset=utf-8" }, 
                     body: JSON.stringify(payload) 
@@ -254,14 +261,15 @@
                 const data = await response.json();
                 if(data && data.error && (data.error.includes("เซสชัน") || data.error.includes("Token"))) {
                     localStorage.removeItem("bpp_token"); sessionStorage.removeItem("bpp_token");
-                    alert("⚠️ เซสชันการเชื่อมต่อหมดอายุ (หรือระบบมีการอัปเดตใหม่) กรุณาลงชื่อเข้าใช้งานใหม่อีกครั้ง");
+                    alert("⚠️ เซสชันหมดอายุ กรุณาลงชื่อเข้าใช้งานใหม่อีกครั้ง");
                     location.reload();
                     throw new Error("Session Expired");
                 }
                 return data;
             } catch (err) { 
                 if(err.message === "Session Expired") throw err;
-                throw new Error(`การเชื่อมต่อเซิร์ฟเวอร์ขัดข้อง \nโปรดตรวจสอบการตั้งค่า Deploy ว่าตั้ง "ผู้มีสิทธิ์เข้าถึง" เป็น "ทุกคน (Anyone)" หรือไม่`); 
+                console.error("Fetch Error Detail:", err);
+                throw new Error("ล้มเหลว: ไม่สามารถเชื่อมต่อฐานข้อมูลได้ โปรดเช็คว่าได้กด 'การทำให้ใช้งานได้รายการใหม่' หรือยัง"); 
             }
         }
 
@@ -306,7 +314,6 @@
             else { log.style.display = "none"; reg.style.display = "block"; }
         }
 
-        // 🔴 อัปเกรดระบบ Login ให้ใช้ POST
         function verifyUser() {
             const name = document.getElementById("loginName").value.trim(); 
             const remember = document.getElementById("chkRemember").checked;
@@ -320,7 +327,7 @@
                         storage.setItem("bpp_token", res.token); storage.setItem("bpp_user", res.user); storage.setItem("bpp_role", res.role); storage.setItem("bpp_dept", res.dept);
                         location.reload(); 
                     } else { alert(res.message); document.getElementById("btnVerify").innerHTML = "ลงชื่อเข้าปฏิบัติงาน"; }
-                }).catch(err => { alert(err.message); document.getElementById("btnVerify").innerHTML = "ลองอีกครั้ง"; }); 
+                }).catch(err => { alert(err.message); document.getElementById("btnVerify").innerHTML = "ลงชื่อเข้าปฏิบัติงาน"; }); 
         }
 
         function submitRegistration() {
@@ -334,7 +341,7 @@
             }).catch(e => { alert(e.message); document.getElementById("btnRegister").innerHTML = "ส่งข้อมูลลงทะเบียน"; });
         }
 
-        function logoutManual() { if(confirm("ต้องการออกจากระบบ?")) { fetchSafePOST({action:"logout", token:getToken()}).then(()=>{ localStorage.clear(); sessionStorage.clear(); location.reload(); }); } }
+        function logoutManual() { if(confirm("ต้องการออกจากระบบ?")) { fetchSafePOST({action:"logout", token:getToken()}).then(()=>{ localStorage.clear(); sessionStorage.clear(); location.reload(); }).catch(()=>{localStorage.clear(); sessionStorage.clear(); location.reload();}); } }
 
         let scannerAssign = null; let scannerScan = null; const html5QrCodeDummy = new Html5Qrcode("dummy-reader"); 
         function stopAllScanners() {
